@@ -1,4 +1,7 @@
 incode.preference
+*.aux
+*.pdf
+*.gz
 #################
 ## Eclipse
 #################
