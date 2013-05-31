@@ -34,6 +34,7 @@ Contains a manifest and about.html website. Maybe for the plugin page.
 	This whole project implements the functionality of CHEOPSJ to extract the changes from an existing java project by
 	connecting to a SVN repository and "distilling" the changes stored there by means of an external library called ChangeDistiller from the
 	Evolizer platform.
+
 	- distiller.cd
 		ChangeDistillerProxy uses the API of the ChangeDistiller to extract the source code changes from two java files
 	- distiller.popup.actions
@@ -43,9 +44,28 @@ Contains a manifest and about.html website. Maybe for the plugin page.
 		The SVN url is currently hardcoded and this could cause problems.
 	
 /be.ac.ua.ansymo.cheopsj.logger
+	The class Cheops when the plugin is started creates new listeners.JavaElementChange class which is used as a listener for the changes that has
+	been made.
+
+	- logger.astdiffer
+		The class ASTComparator is used in the ChangeRecorder class in the method findAndLogChanges and in class DistillChanges in order to
+		compare the old and new AST and to find the differences by using the method diff.
+		The DiffVisitor class extends ASTVisitor which is used to visit every node in an Abstract Syntax Tree. This class is instanciated in
+		the ASTComparator class in order to compare the differencies between the two ASTs.
+	- logger.listeners
+		The class JavaElementChange creates new IElementChangedListener which is used when a new Cheops is created and serves as a listener
+		if any changes are made to a Java element. It records the fine grained changes using the method recordElementChanges().
+		The method recordElementChanges in the class ChangeRecorder is used by JavaElementChange in order to record the changes made
+		inside the Java editor.
 
 /be.ac.ua.ansymo.cheopsj.model
 	Famix?, Changes model, Model manager
+	
+	- model.changes
+		The class Change implements the interface IChange. This class only implements the methods from the interface and is extended by 
+		AtomicChange and CompositeChange classes.
+	- model.famix
+
 /be.ac.ua.ansymo.cheopsj.model.ui
 	UI model
 /be.ac.ua.ansymo.cheopsj.testtool
