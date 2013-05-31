@@ -67,7 +67,19 @@ Contains a manifest and about.html website. Maybe for the plugin page.
 	- model.famix
 
 /be.ac.ua.ansymo.cheopsj.model.ui
-	UI model
+	This project gives support to the user interface. It's clearly splited in 3 part.
+	
+	- ui.handlers
+        The classes are connected with ModelManager class to get the instance of the current proyect and call the methods who implements the 
+        funcionality of the buttons in the interface.
+    - ui.changeinspector
+        The class ChangeSorter implements the functionality to sort (in ascending or descending) a table of contents by the differents fields of 
+        the table. The other classes create the table viewer and update the content on it. The information is obtained from the class 
+        ModelManager by the class ChangeViewContentProvider.
+    - ui.changegraph
+        This packet provides the functionality of the graph viewer where the changes graph is represented. The class 
+        ZestChangeViewContentProvider is connected with the class ModelManager to get the infomation.
+
 /be.ac.ua.ansymo.cheopsj.testtool
 	Testing
 	
@@ -75,3 +87,4 @@ Contains a manifest and about.html website. Maybe for the plugin page.
 	
 /org.evolizer.changedistiller
 External library for extracting source code changes from two java files.
+
