@@ -74,5 +74,4 @@ Contains a manifest and about.html website. Maybe for the plugin page.
 /be.ac.ua.ansymo.cheopsj.update
 	
 /org.evolizer.changedistiller
-Seems to contain some static constants to represent types of changes.
-Source is missing though.
+External library for extracting source code changes from two java files.
