@@ -59,13 +59,46 @@ Contains a manifest and about.html website. Maybe for the plugin page.
 		inside the Java editor.
 
 /be.ac.ua.ansymo.cheopsj.model
-	Famix?, Changes model, Model manager
+	There are no tests implemented for this package.
+	
+	The ModelManager class as it is written in the main comment is a singleton class (only one instance of the class) 
+	and is storing all the Famix Entities created and the changes that have been made to them. This class has a decent number 
+	of comments and they are helpful for understanding the role of this class. The class ModelManager contains methods
+	used to manipulate with all the Famix entities created and also the changes that have been done to them (ex. famixElementExist, 
+	famixClassExists, getFamixVariable etc.). This class also adds a listener which is an instance from the class ModelManagerListener,
+	the listener is updated whenever a change is done to the model.
 	
 	- model.changes
-		The class Change implements the interface IChange. This class only implements the methods from the interface and is extended by 
-		AtomicChange and CompositeChange classes.
-	- model.famix
+		The class Change implements the interface IChange, which extends the IAdaptable interface (an interface for adapdable objects).
+		This class only implements the methods from the interface and is extended by AtomicChange and CompositeChange classes.
+		The class Subject implements methods for finding the latest changes that occured. Its methods are mainly used by the classes in
+		the package cheopsj.changerecorders for getting the latest additions, removals or changes of some of the Famix objects.
 
+		Hierarchy of the classes in this package:
+		Change	<-    AtomicChange	<-   Modify
+						<-   Add
+						<-   Remove
+			<-    CompositeChange
+
+		The most important class is Change which methods are used almost in every other root package of the workspace to arrange the 
+		semantical and structural hierarchy and also is extended so some additional methods are added for addition, removal or modifing an element.
+	- model.famix
+		The FamixObject class is one of the most important classes because it is extended afterwards and is on the top of the hierachy
+		in this package. It contains a collection of famix properties (properties of the famix elements like name, value, to which object does
+		the property belongs) and methods for managing the properties (setters, getters ...).
+		The classes that are leaves in the hierachy are using methods for standard operations regarding the famix class they are located into. 
+		For example in the class FamixClass there are methods for adding methods, attributes to the FamixClass or in the class FamixPackage which is
+		also a large class there are methods for checking if the package is empty, removing classes from the package, returning the size of the package.
+
+		Subject   <-   FamixObject   <-   FamixEntity		<-   FamixClass
+									<-   FamixMethod
+									<-   FamixFunction
+									<-	...
+									<-	...
+					     
+					     <-   FamixAssociation	<-   FamixAccess
+									<-   FamixInheritanceDefinition
+									<-   FamixInvocation
 /be.ac.ua.ansymo.cheopsj.model.ui
 	UI model
 /be.ac.ua.ansymo.cheopsj.testtool
