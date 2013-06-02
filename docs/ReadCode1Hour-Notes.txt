@@ -17,10 +17,10 @@ Only contains feature.xml with references to all other projects.
 Also contains update site url. Apparently is for finding and installing the plugin.
 
 /be.ac.ua.ansymo.cheopsj.branding
-Contains a manifest and about.html website. Maybe for the plugin page.
+Contains a manifest and about.html website. Seems related to the plugin information displayed when browsing the plugin to install in Eclipse.
 
 /be.ac.ua.ansymo.cheopsj.changerecorders
-	Datastructures for storing the changes of each type of entity (Class, Method, Variable, etc)
+	This project contains the datastructures used for storing the changes of each type of entity (Class, Method, Variable, etc)
 	AbstractEntityRecorder at TOP of hierarchy subclassed by all recorders.
 	StatementRecorder also abstract subclassed only by LocalVariable and MethodInvocation recorders adds extra common methods
 	One class recorder for each type of change (e.g. field, method, package, etc)
@@ -28,11 +28,14 @@ Contains a manifest and about.html website. Maybe for the plugin page.
 	FOR OUR PROJECT GOAL: We would need to extend/create some recorders e.g. local variables, method signature, accessors, etc.
 	Note: Some of this classes are already in the project but have been excluded form the build path (probably incomplete) so we can maybe use
 	them as basis.
-	Comments: Decent amount of comments in the most important classes and methods, the functionality of these classes is also not very complicated.
+	
+	Comments: There are a few comments in the code. Some are meant for the programmer himself, reminding him of things he has to do and some of them are informative but also a bit redundant because the functionality can be easily understood from the naming of the methods or variables.
+	
+	Tests: The tests found check if the change recorders work correctly for additions and removals of the corresponding java element (project, package, class, etc)
 	
 /be.ac.ua.ansymo.cheopsj.distiller
 	This whole project implements the functionality of CHEOPSJ to extract the changes from an existing java project by
-	connecting to a SVN repository and "distilling" the changes stored there by means of an external library called ChangeDistiller from the
+	connecting to a SVN repository and "DISTILLING" the changes stored there by means of an external library called ChangeDistiller from the
 	Evolizer platform.
 
 	- distiller.cd
@@ -43,25 +46,31 @@ Contains a manifest and about.html website. Maybe for the plugin page.
 		Takes care of connecting and extracting the revisions from the SVN repository.
 		The SVN url is currently hardcoded and this could cause problems.
 	
+	Comments: 
+	
+	NO Tests
+	
 /be.ac.ua.ansymo.cheopsj.logger
-	The class Cheops when the plugin is started creates new listeners.JavaElementChange class which is used as a listener for the changes that has
-	been made.
-
+	The logger project takes care of the second functionaility of CHEOPSJ which is to LOG the new changes made by the user.
+	- logger
+		The classes in the logger package initialize the logger plugin in eclipse.
 	- logger.astdiffer
 		The class ASTComparator is used in the ChangeRecorder class in the method findAndLogChanges and in class DistillChanges in order to
-		compare the old and new AST and to find the differences by using the method diff.
-		The DiffVisitor class extends ASTVisitor which is used to visit every node in an Abstract Syntax Tree. This class is instanciated in
-		the ASTComparator class in order to compare the differencies between the two ASTs.
+		compare the old and new ASTs (of the java project) and to find the differences (changes) between them.
+		The DiffVisitor class extends ASTVisitor and is performs the actual checking for differences between old and new ASTs.
 	- logger.listeners
-		The class JavaElementChange creates new IElementChangedListener which is used when a new Cheops is created and serves as a listener
-		if any changes are made to a Java element. It records the fine grained changes using the method recordElementChanges().
-		The method recordElementChanges in the class ChangeRecorder is used by JavaElementChange in order to record the changes made
-		inside the Java editor.
-
-/be.ac.ua.ansymo.cheopsj.model
-	There are no tests implemented for this package.
+		The two classes in this package take care of the actual listening of java element changes events, which we suppose are what happens when
+		e.g. the user modifies a method or adds or removes a class.
+		From the comments we can also infer that it records the fine grained changes made inside the Java editor.
+	- logger.util
+		The classes in util seem to be helper classes for the whole workspace. Although the Constants class is currently not used anywhere in the workspace.
 	
-	The ModelManager class as it is written in the main comment is a singleton class (only one instance of the class) 
+	Comments
+	
+	Tests: Contains some tests that should be investigated further.
+		
+/be.ac.ua.ansymo.cheopsj.model
+	The ModelManager class employs the singleton pattern (only one instance of the class) 
 	and is storing all the Famix Entities created and the changes that have been made to them. This class has a decent number 
 	of comments and they are helpful for understanding the role of this class. The class ModelManager contains methods
 	used to manipulate with all the Famix entities created and also the changes that have been done to them (ex. famixElementExist, 
@@ -75,10 +84,10 @@ Contains a manifest and about.html website. Maybe for the plugin page.
 		the package cheopsj.changerecorders for getting the latest additions, removals or changes of some of the Famix objects.
 
 		Hierarchy of the classes in this package:
-		Change	<-    AtomicChange	<-   Modify
-						<-   Add
-						<-   Remove
-			<-    CompositeChange
+		Change	<-	AtomicChange	<-	Modify
+				<-   Add
+				<-   Remove
+				<-	CompositeChange
 
 		The most important class is Change which methods are used almost in every other root package of the workspace to arrange the 
 		semantical and structural hierarchy and also is extended so some additional methods are added for addition, removal or modifing an element.
@@ -99,12 +108,33 @@ Contains a manifest and about.html website. Maybe for the plugin page.
 					     <-   FamixAssociation	<-   FamixAccess
 									<-   FamixInheritanceDefinition
 									<-   FamixInvocation
+	NO Tests
+
 /be.ac.ua.ansymo.cheopsj.model.ui
-	UI model
+	This project gives support to the user interface. It's clearly splited in 3 part.
+	
+	- ui.handlers
+        The classes are connected with ModelManager class to get the instance of the current proyect and call the methods who implements the 
+        funcionality of the buttons in the interface.
+    - ui.changeinspector
+        The class ChangeSorter implements the functionality to sort (in ascending or descending) a table of contents by the differents fields of 
+        the table. The other classes create the table viewer and update the content on it. The information is obtained from the class 
+        ModelManager by the class ChangeViewContentProvider.
+    - ui.changegraph
+        This packet provides the functionality of the graph viewer where the changes graph is represented. The class 
+        ZestChangeViewContentProvider is connected with the class ModelManager to get the infomation.
+	NO Tests
 /be.ac.ua.ansymo.cheopsj.testtool
-	Testing
+	The plugin implemented in this project is used for finding tests relevant to a set of changes. This is another mentioned functionality of CHEOPSJ, namely to provide the user the tests that depend on an entity (e.g. class or method) and that would have to be checked for correctness after that entity has been modified. From the comments the functionality of the main method findTests is: first, it finds the method where the selected change is in and second it finds the tests that call that method, in other words the relevant tests.
+	NO Tests
 	
 /be.ac.ua.ansymo.cheopsj.update
+	This project contains information about the update site of the CHEOPSJ plugin
 	
 /org.evolizer.changedistiller
 External library for extracting source code changes from two java files.
+
+=====================
+Conclusion:
+=====================
+In general, the naming conventions of the whole workspace seem appropiate and help understanding the code much faster. The separation of classes into projects and into packages also states the intention of each group of classes more clearly. The comments could be better, but then again because of the facts just mentioned, they are not always needed. Finally, only two projects (changerecorders and logger) contain tests, the logger is an important part of CHEOPSJ because it implements on of its main functionalities i.e. logging new changes for a project. Nevertheless, the distiller project takes care of the other main functionality of CHEOPSJ, which is distilling changes from an existing project, and will perhaps need the implementation of tests for the reengineering. The model project seems also very relevant (specially the model manager) but it doesn't have any tests.
