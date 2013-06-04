@@ -19,7 +19,7 @@ text
 text
 
 \subsection{Read all the code in one hour}
-For this task we saw that the ChEOPSJ system is splitted into ten projects, so we decided to divide them among the three members of our group. Each member read the code of their corresponding projects in around one hour and took notes. Then we explained our findings to the rest of the group and merged the notes together to produce the report shown below. Because of the `time is scarce' principle, we payed more attention to the following items, as it is proposed in \cite{demeyer02}:
+For this task we saw that the ChEOPSJ system is split into ten projects, so we decided to divide them among the three members of our group. Each member read the code of their corresponding projects in around one hour and took notes. Then we explained our findings to the rest of the group and merged the notes together to produce the report shown below. Because of the `time is scarce' principle, we payed more attention to the following items, as it is proposed in \cite{demeyer02}:
 \begin{itemize}
 \item Abstract classes and methods, that reveal design intentions.
 \item Classes high in the hierarchy, which often define domain abstractions; their subclasses introduce variations on a theme.
@@ -90,9 +90,9 @@ The project \emph{be.ac.ua.ansymo.cheopsj.model.ui} contains the implementation 
 
 The \emph{ui.changeinspector} package seems to contain the classes relevant to the change inspector view. The class ChangeSorter implements the functionality to sort (in ascending or descending) the changes in this view. The other classes create the viewer and update the content on it. 
 
-Similarily to the change inspector view, the \emph{ui.changegraph} package contains the implementation for the change graph view.
+Similarly to the change inspector view, the \emph{ui.changegraph} package contains the implementation for the change graph view.
 
-This project deals exclusively with the graphical interface and it should not be neccessary to modify in order to add new features.
+This project deals exclusively with the graphical interface and it should not be necessary to modify in order to add new features.
 
 There are no tests present in this project.
 
@@ -111,7 +111,7 @@ The project \emph{be.ac.ua.ansymo.cheopsj.update} contains information about the
 The project \emph{org.evolizer.changedistiller} contains the external library for extracting source code changes from two java files used in the \emph{be.ac.ua.ansymo.cheopsj.distiller} project.
 
 \subsubsection{Conclusion}
-In conclusion, the naming conventions of the whole workspace seem appropiate and help understanding the code much faster. The separation of classes into projects and into packages also states the intention of each group of classes more clearly. The comments could be better, but then again because of the facts just mentioned, they are not always needed. Finally, only two projects (changerecorders and logger) contain tests, the logger is an important part of ChEOPSJ because it implements on of its main functionalities i.e. logging new changes for a project. In the other hand, the distiller project takes care of the other main functionality of ChEOPSJ, which is distilling changes from an existing project, but it does not contain tests. It is possible that we will need to implement tests for this project in the future. The model project seems also very relevant (specially the model manager) and doesn not have any tests either.
+In conclusion, the naming conventions of the whole workspace seem appropriate and help understanding the code much faster. The separation of classes into projects and into packages also states the intention of each group of classes more clearly. The comments could be better, but then again because of the facts just mentioned, they are not always needed. Finally, only two projects (changerecorders and logger) contain tests, the logger is an important part of ChEOPSJ because it implements on of its main functionalities i.e. logging new changes for a project. In the other hand, the distiller project takes care of the other main functionality of ChEOPSJ, which is distilling changes from an existing project, but it does not contain tests. It is possible that we will need to implement tests for this project in the future. The model project seems also very relevant (specially the model manager) and does not have any tests either.
 
 \subsection{Skim the Documentation}
 
@@ -119,7 +119,7 @@ In conclusion, the naming conventions of the whole workspace seem appropiate and
 \subsection{Interview During Demo}
 
 \subsection{Do a Mock Installation}
-The first time we tried build the system in eclipse, we encountered some errors that prevented us doing it. A few plug-ins were missing, namely the SVN Team Provider and also the SWT library was not found in our Eclipse installation. After we solved this two problems all the errors dissappeared and we were able to build the system. 
+The first time we tried build the system in eclipse, we encountered some errors that prevented us doing it. A few plug-ins were missing, namely the SVN Team Provider and also the SWT library was not found in our Eclipse installation. After we solved this two problems all the errors disappeared and we were able to build the system. 
 
 With the system running, we added a mock project to the workspace along with some packages and classes to see the functionality of the system. We noticed from the console that some exceptions were thrown while adding new elements in the java editor saying that the elements could not be found. It would appear that the system tries to locate this elements in real-time while the user is not finished defining them in the editor.
 
@@ -135,6 +135,18 @@ The first functionality we speculate about is the logging of new changes. For th
 \label{fig:spec1}
 \end{figure}
 
+\subsection{Study the Exceptional Entities}
+For finding and defining the potential design flaws we have used the tool inFusion which was introduced to us on one of the laboratory sessions. We found this tool very useful at finding and also graphically representing the results of its analysis of the structure and design of the ChEOPSJ plugin. In the following section we are going to present and describe our findings regarding the exceptional entities.
+
+InFusion for general grading of the system uses a Quality Deficit Index (QDI), which in our case is 14.1. In the documentation for the tool it is described that the bigger the QDI is, the more significant design problems the tool has found. Among the other most important statistics the number of Design Flaws is worth mentioning and inFusion has found 26 of them in our case. The tool has also found 2 God Classes: ModelManager from the package model and the ClassRecorder class from the changerecorders package. This was expected because the both classes are very large and they use many attributes from external classes.
+
+One very useful feature of the inFusion tool is the interpretation of the information collected from the workspace and is based on combination of mathematical formulas which as an input take different measures like Lines of Code (LOC), Number of Packages (NOP) etc. InFusion reported that:
+
+\begin{itemize}
+  \item Class hierarchies are very tall, which means that the inheritance trees have big depths. This statement is true because during the going through the code in one hour we have seen that the hierarchy in the packages model.famix and changerecoreders is pretty large.
+  \item The classes have an average number of methods and also there are not many classes per package, which is true and is positive aspect of the workspace. It means that the functionalities of the classes are very good divided in methods and also the classes are very well grouped and divided in packages according to their functionalities.
+  \item Methods ...
+\end{itemize}
 
 \section{Reengineering}
 text
