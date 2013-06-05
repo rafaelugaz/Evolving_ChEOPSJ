@@ -130,23 +130,38 @@ The first functionality we speculate about is the logging of new changes. For th
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.8\textwidth]{ChangeLogging}
+\includegraphics[width=0.8\textwidth]{Images/ChangeLogging}
 \caption{Initial design speculation for the change logging functionality}
 \label{fig:spec1}
 \end{figure}
 
 \subsection{Study the Exceptional Entities}
-For finding and defining the potential design flaws we have used the tool inFusion which was introduced to us on one of the laboratory sessions. We found this tool very useful at finding and also graphically representing the results of its analysis of the structure and design of the ChEOPSJ plugin. In the following section we are going to present and describe our findings regarding the exceptional entities.
+For finding and defining the potential design flaws we have used the tool inFusion which was introduced to us on one of the laboratory sessions. We found this tool very useful in detecting and also graphically representing the results of its analysis of the structure and design of the ChEOPSJ plugin. In the following section we are going to present and describe our findings regarding the exceptional entities.
 
-InFusion for general grading of the system uses a Quality Deficit Index (QDI), which in our case is 14.1. In the documentation for the tool it is described that the bigger the QDI is, the more significant design problems the tool has found. Among the other most important statistics the number of Design Flaws is worth mentioning and inFusion has found 26 of them in our case. The tool has also found 2 God Classes: ModelManager from the package model and the ClassRecorder class from the changerecorders package. This was expected because the both classes are very large and they use many attributes from external classes.
+InFusion for general grading of the system uses a Quality Deficit Index (QDI), which in our case is 14.1. In the documentation for the tool it is described that the bigger the QDI is, the more significant design problems the tool has found. Among the other important statistics the number of Design Flaws is worth mentioning and inFusion has found 26 of them in our case. The tool has also found 2 God Classes: ModelManager from the package model and the ClassRecorder class from the changerecorders package. This was expected because the both classes are very large and they use many attributes from external classes.
 
 One very useful feature of the inFusion tool is the interpretation of the information collected from the workspace and is based on combination of mathematical formulas which as an input take different measures like Lines of Code (LOC), Number of Packages (NOP) etc. InFusion reported that:
 
 \begin{itemize}
   \item Class hierarchies are very tall, which means that the inheritance trees have big depths. This statement is true because during the going through the code in one hour we have seen that the hierarchy in the packages model.famix and changerecoreders is pretty large.
-  \item The classes have an average number of methods and also there are not many classes per package, which is true and is positive aspect of the workspace. It means that the functionalities of the classes are very good divided in methods and also the classes are very well grouped and divided in packages according to their functionalities.
-  \item Methods ...
+  \item The classes have an average number of methods and also there are not many classes per package, which is true and is positive aspect of the system. It means that the functionalities of the classes are very good divided in methods and also the classes are very well grouped and divided in packages according to their functionalities.
+  \item Methods are long because there are approximately 12 lines of code per method, but on the other hand their logic is simple because there are not many conditional branches in the methods, which is true. Another anomaly that the methods have is the high coupling intensity which means that many other methods are called inside the current method and that makes the code rather complex.
 \end{itemize}
+
+Furthermore, as we suspected inFusion discovered the class ModelManager from the package cheopsj.model as a God class. This class is one of the largest and most complex classes in the whole system. Its job is to store and maintain every famix element created and also take care of all the changes created by the change recorders, that is the reason why this class is very complex and its coupling with the rest of the system is very high. On Figure \ref{fig:spec2} the graphical representation of the whole model package can be seen, where the ModelManager class is located in the left-bottom corner, colored with strong red color. Judging by the hight, width and color of the class (which represent the number of methods, attributes and design flaws respectfully) it can be concluded that the class ModelManager is a God Class indeed.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{Images/GodClassMM}
+\caption{Graphical representation of the package cheopsj.model with inFusion}
+\label{fig:spec2}
+\end{figure}
+
+InFusion has brought up some facts about the god class and suggested some actions that could be taken. The first fact was that ModelManager uses a lot of attributes from external classes which was very obvious from the first look at the code, because those attributes are necessary for correct functioning of the numerous methods used for managing of the processes in the model. The second fact was that this class is excessively large and complex and the reason for that are the methods, which have high cyclomatic complexity (a lot of branching in the code) and high nesting level. The biggest and most complex method is printGraphForGroove(), which has a heavy code branching and deep nesting. Also this method has very weak encapsulation because it calls a lot of external accessors.
+
+The second most complex and also God Class is ClassRecorder, which is located in the changerecorders package and its job is to record every change done to the famixClass element. This class has very weak cohesion with the system because its methods are rarely called and on the other hand it calls a large number of external methods. ClassRecorder is also non-cohesive because its methods does not use its attributes very often, for example the method findParentName is using none of the attributes of the class.
+
+The usage of inFusion has helped us a lot for better understanding of the complexity of the system and detection of some of the design flaws. What really makes the job easier is the graphical representation of some of the most important features of an object-oriented code in our case Java, like encapsulation, cohesion, size, complexity, hierarchies. The small drawback of this method is that there are so many statistics and they are increasing with every other tool, that the developer can sometimes get carried away in a direction away from the essential problems of the design. Also the tools like inCode or inFusion only represent the information collected from the source code, but none of them offers some kind of a solution to some of the design flaws encountered.
 
 \section{Reengineering}
 text
