@@ -125,13 +125,36 @@ With the system running, we added a mock project to the workspace along with som
 
 \section{Initial Understanding}
 
-\subsection{Speculating about Design}
-The first functionality we speculate about is the logging of new changes. For this we developed the class diagram shown in Figure \ref{fig:spec1}. We recognized three main elements involved in this process: a change recorder, a change and an element that suffers this change.
+\subsection{Speculate about Design}
+Because our goal is to restructure ChEOPSJ to support recording changes of more fine-grained level of detail, we focused on the design of the recording of changes. This process is relevant for two of the main functionalities of ChEOPSJ, logging of new changes as well as extracting changes from an existing project.
+
+\subsubsection{First class diagram}
+With our understanding of the system, we recognized three main actors involved in this process: a change, the element that suffers the change and a change recorder that creates these two objects in some way. This can be seen in the first class diagram that we designed, shown in Figure \ref{fig:spec1}.
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.8\textwidth]{Images/ChangeLogging}
-\caption{Initial design speculation for the change logging functionality}
+\includegraphics[width=0.8\textwidth]{Images/spec0}
+\caption{Initial design speculation about recording of changes.}
+\label{fig:spec1}
+\end{figure}
+
+\subsubsection{Second class diagram}
+After examinating the code for mismatches with the initial hypothesis, we adapted the class diagram in several ways, as can be seen in Figure \ref{fig:spec2}:
+
+\begin{itemize}
+\item First, we renamed the ChangeRecorder to AbstractEntityRecorder, which is at the top of the hierarchy of all change recorder classes. We also added some of the subclasses of this hierarchy like PackageRecorder, MethodRecorder and ClassRecorder. The way this AbstractEntityRecorder is invoked and by which class is still pending.
+
+\item The Element class was renamed to Subject, which is also located at the top of the hierarchy of the elements that suffer the changes, followed by FamixObject and then all the elements like for example FamixClass, FamixPackage and FamixMethod. This was also partially extended in the diagram.
+
+\item The Change class was also extended to show the hierarchy of change classes, by adding the subclasses specific types of changes Add, Remove and Modify.
+
+\item Finally, the interaction between these three classes was specified, this consists in the ChangeRecorder (AbstractEntityRecorder) creating and also linking together the Change and Subject objects. The storeChange method was confirmed in the source code and is where the creation and linking takes place.
+\end{itemize}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{Images/spec1}
+\caption{Second design speculation about recording of changes.}
 \label{fig:spec1}
 \end{figure}
 
