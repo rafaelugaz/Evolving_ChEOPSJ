@@ -183,35 +183,11 @@ public class MethodRecorder extends AbstractEntityRecorder {
 		change.setChangeSubject(famixMethod);
 		famixMethod.addChange(change);
 
-		setStructuralDependencies(change, famixMethod);
+		setStructuralDependencies(change, famixMethod, parent, this);
 		manager.addChange(change);
 	}
 
-	protected void setStructuralDependencies(AtomicChange change, Subject subject) {
-		if (change instanceof Add) {
-			if (parent != null) {
-				Change parentChange = parent.getLatestAddition();
-				if (parentChange != null) {
-					change.addStructuralDependency(parentChange);
-				}
-			}
-			Remove removalChange = subject.getLatestRemoval();
-			if (removalChange != null) {
-				change.addStructuralDependency(removalChange);
-			}
-		} else if (change instanceof Remove) {
-			// set dependency to addition of this entity
-			// Subject removedSubject = change.getChangeSubject();
-			AtomicChange additionChange = subject.getLatestAddition();
-			if (additionChange != null) {
-				change.addStructuralDependency(additionChange);
-
-				removeAllContainedWithin(change, additionChange);
-			}
-		}
-	}
-
-	private void removeAllContainedWithin(AtomicChange change, AtomicChange additionChange) {
+	protected void removeAllContainedWithin(AtomicChange change, AtomicChange additionChange) {
 		Collection<Change> dependees = additionChange.getStructuralDependees();
 		for (Change dependee : dependees) {
 			if (dependee instanceof Add) {
@@ -222,7 +198,7 @@ public class MethodRecorder extends AbstractEntityRecorder {
 
 					Remove removal = new Remove();
 					removal.setChangeSubject(changesubject);
-					setStructuralDependencies(removal, removal.getChangeSubject());
+					setStructuralDependencies(removal, removal.getChangeSubject(), parent, this);
 
 					change.addStructuralDependency(removal);
 

@@ -88,16 +88,22 @@ public class MethodInvocationRecorder extends StatementRecorder {
 				}
 			}else{
 				calledMethodName = invokedby.getBelongsToClass().getUniqueName() + '.' + calledMethodName;
-				if(manager.famixMethodExists(calledMethodName)){
-					calledmethod = manager.getFamixMethod(calledMethodName);
-				}else{
-					calledmethod = new FamixMethod();
-					calledmethod.setUniqueName(calledMethodName);
-					calledmethod.setIsDummy(true);
-					manager.addFamixElement(calledmethod);
-				}
+				getOrAddCalledMethod();
+				
 			}
 
+		}
+	}
+	
+	public void getOrAddCalledMethod() {
+		
+		if(manager.famixMethodExists(calledMethodName)){
+			calledmethod = manager.getFamixMethod(calledMethodName);
+		}else{
+			calledmethod = new FamixMethod();
+			calledmethod.setUniqueName(calledMethodName);
+			calledmethod.setIsDummy(true);
+			manager.addFamixElement(calledmethod);
 		}
 	}
 
@@ -165,14 +171,7 @@ public class MethodInvocationRecorder extends StatementRecorder {
 			invokedby = manager.getFamixMethod(containingMethodName);
 		} //invokedby should exist
 
-		if(manager.famixMethodExists(calledMethodName)){
-			calledmethod = manager.getFamixMethod(calledMethodName);
-		} else {
-			calledmethod = new FamixMethod();
-			calledmethod.setUniqueName(calledMethodName);
-			calledmethod.setIsDummy(true);
-			manager.addFamixElement(calledmethod);
-		}
+		getOrAddCalledMethod();
 
 		stringrepresentation = invokedby.getUniqueName() + '{' + calledMethodName + '}';
 
