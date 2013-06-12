@@ -111,8 +111,8 @@ public class ChangeExtractor {
 	//#############################
 	//######## REMOVALS ###########
 	//#############################
-
-	public void storeMethodInvocationRemovals(String contents) {
+	
+	public void storeMethodInvocation(String contents, int flag) {
 		TypeDeclaration bigType = getDeclaredType(contents);
 		if(bigType != null){
 			MethodDeclaration[] methods = bigType.getMethods();
@@ -121,10 +121,20 @@ public class ChangeExtractor {
 				method.accept(visitor);
 				for(MethodInvocation invocation: visitor.getMethodInvocations()){
 					StatementRecorder recorder = new MethodInvocationRecorder(invocation);
-					recorder.storeChange(createRemoval());
+					if(flag == 1) {
+						recorder.storeChange(createRemoval());
+					}
+					else {
+						recorder.storeChange(createAddition());
+					}
 				}
 			}
 		}
+	}
+
+	public void storeMethodInvocationRemovals(String contents) {
+		int flag = 1;
+		storeMethodInvocation(contents, flag);
 	}
 
 	public void storeMethodRemoval(String contents) {
@@ -194,26 +204,8 @@ public class ChangeExtractor {
 	}
 
 	public void storeMethodAdditions(String contents) {
-		TypeDeclaration bigType = getDeclaredType(contents);
-		if(bigType != null){
-			MethodDeclaration[] methods = bigType.getMethods();
-			for(MethodDeclaration method : methods){
-				MethodRecorder recorder = new MethodRecorder(method);
-				recorder.storeChange(createAddition());
-				//storeLocalVariableAdditions(method);
-			}			
-			
-			TypeDeclaration[] localtypes = bigType.getTypes();
-			for(TypeDeclaration type: localtypes){
-				MethodDeclaration[] submethods = type.getMethods();
-				for(MethodDeclaration method : submethods){
-					MethodRecorder recorder = new MethodRecorder(method);
-					recorder.storeChange(createAddition());
-					//storeLocalVariableAdditions(method);
-				}
-				
-			}
-		}
+		int flag = 2;
+		storeMethodInvocation(contents, flag);
 	}
 
 	public void storeLocalVariableAdditions(MethodDeclaration method){

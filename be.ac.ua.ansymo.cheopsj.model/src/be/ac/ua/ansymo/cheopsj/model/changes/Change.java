@@ -254,19 +254,18 @@ public class Change implements IChange, Serializable {
 		String returnval = "";
 		returnval += getChangeType() + " of " + getFamixType() + " " + getName() + '\n';
 		returnval += "Structural dependencies" + '\n';
-		for (Change ch : this.structuralDependencies) {
-			returnval += ch.getChangeType() + " of " + ch.getFamixType() + " " + ch.getName() + '\n';
-		}
+		returnval += helpToString(returnval, structuralDependencies);
 		returnval += "Structural dependees" + '\n';
-		for (Change ch : this.structuralDependees) {
-			returnval += ch.getChangeType() + " of " + ch.getFamixType() + " " + ch.getName() + '\n';
-		}
+		returnval += helpToString(returnval, structuralDependees);
 		returnval += "Semantical dependencies" + '\n';
-		for (Change ch : this.semanticalDependencies) {
-			returnval += ch.getChangeType() + " of " + ch.getFamixType() + " " + ch.getName() + '\n';
-		}
+		returnval += helpToString(returnval, semanticalDependencies);
 		returnval += "Semantical dependees" + '\n';
-		for (Change ch : this.semanticalDependees) {
+		returnval += helpToString(returnval, semanticalDependees);
+		return returnval;
+	}
+	
+	public String helpToString(String returnval, Collection<Change> depen) {
+		for (Change ch : depen) {
 			returnval += ch.getChangeType() + " of " + ch.getFamixType() + " " + ch.getName() + '\n';
 		}
 		return returnval;
