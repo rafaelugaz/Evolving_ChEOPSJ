@@ -158,41 +158,50 @@ public class LocalVariableRecorder extends StatementRecorder {
 
 	private void setStructuralDependencies(AtomicChange change, Subject subject) {
 		if (change instanceof Add) {
-			
-			//link to addition of containing method
-			if (containingMethod != null) {
-				Change parentChange = containingMethod.getLatestAddition();
-				if (parentChange != null) {
-					change.addStructuralDependency(parentChange);
-				}
-			}
-			
-			//link to addition of declared type
-			if(declaredClass != null){
-				Change declaredClassChange = declaredClass.getLatestAddition();
-				if(declaredClassChange != null){
-					change.addStructuralDependency(declaredClassChange);
-				}else{
-					AtomicChange a = new Add();
-					a.setDummy(true);
-					change.addStructuralDependency(a);
-					a.setChangeSubject(declaredClass);
-					declaredClass.addChange(a);
-				}
-			}
-			
-			
-			Remove removalChange = subject.getLatestRemoval();
-			if (removalChange != null) {
-				change.addStructuralDependency(removalChange);
-			}
-		} else if (change instanceof Remove) {
+			setStructDepAdd(change, subject);
+		} 
+		else if (change instanceof Remove) {
 			// set dependency to addition of this entity
 			// Subject removedSubject = change.getChangeSubject();
 			AtomicChange additionChange = subject.getLatestAddition();
 			if (additionChange != null) {
 				change.addStructuralDependency(additionChange);
 			}
+		}
+	}
+	
+	private void setStructDepAdd(AtomicChange change, Subject subject) {
+		
+		//link to addition of containing method
+		if (containingMethod != null) {
+			Change parentChange = containingMethod.getLatestAddition();
+			if (parentChange != null) {
+				change.addStructuralDependency(parentChange);
+			}
+		}
+		
+		//link to addition of declared type
+		if(declaredClass != null){
+			linkToAddition(change);
+		}
+		
+		Remove removalChange = subject.getLatestRemoval();
+		if (removalChange != null) {
+			change.addStructuralDependency(removalChange);
+		}
+	}
+	
+	//link to addition of declared type
+	private void linkToAddition(AtomicChange change) {
+		Change declaredClassChange = declaredClass.getLatestAddition();
+		if(declaredClassChange != null){
+			change.addStructuralDependency(declaredClassChange);
+		}else{
+			AtomicChange a = new Add();
+			a.setDummy(true);
+			change.addStructuralDependency(a);
+			a.setChangeSubject(declaredClass);
+			declaredClass.addChange(a);
 		}
 	}
 

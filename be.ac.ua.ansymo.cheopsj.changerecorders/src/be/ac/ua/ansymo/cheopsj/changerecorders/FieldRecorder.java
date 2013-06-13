@@ -242,28 +242,34 @@ public class FieldRecorder extends AbstractEntityRecorder {
 
 	protected void setStructuralDependencies(AtomicChange change, Subject subject) {
 		if (change instanceof Add) {
-			if (ContainingClass != null) {
-				Change parentChange = ContainingClass.getLatestAddition();
-				if (parentChange != null) {
-					change.addStructuralDependency(parentChange);
-				}
-			}
-			Remove removalChange = subject.getLatestRemoval();
-			if (removalChange != null) {
-				change.addStructuralDependency(removalChange);
-			}
-			if (declaredClass != null) {
-				Change declChange = declaredClass.getLatestAddition();
-				if (declChange != null) {
-					change.addStructuralDependency(declChange);
-				}
-			}
-		} else if (change instanceof Remove) {
+			setStructDepAdd(change, subject);
+		}
+		else if (change instanceof Remove) {
 			// set dependency to addition of this entity
 			// Subject removedSubject = change.getChangeSubject();
 			AtomicChange additionChange = subject.getLatestAddition();
 			if (additionChange != null) {
 				change.addStructuralDependency(additionChange);
+			}
+		}
+	}
+	
+	private void setStructDepAdd(AtomicChange change, Subject subject) {
+		
+		if (ContainingClass != null) {
+			Change parentChange = ContainingClass.getLatestAddition();
+			if (parentChange != null) {
+				change.addStructuralDependency(parentChange);
+			}
+		}
+		Remove removalChange = subject.getLatestRemoval();
+		if (removalChange != null) {
+			change.addStructuralDependency(removalChange);
+		}
+		if (declaredClass != null) {
+			Change declChange = declaredClass.getLatestAddition();
+			if (declChange != null) {
+				change.addStructuralDependency(declChange);
 			}
 		}
 	}

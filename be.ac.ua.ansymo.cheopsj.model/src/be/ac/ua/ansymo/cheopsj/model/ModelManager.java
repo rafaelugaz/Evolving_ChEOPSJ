@@ -275,7 +275,6 @@ public class ModelManager implements Serializable{
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public void loadModel() {
 		// CheopsjLog.logInfo("Loading Model");
 		File file = getModelFile();
@@ -286,25 +285,35 @@ public class ModelManager implements Serializable{
 			try {
 				fis = new FileInputStream(file);
 				in = new ObjectInputStream(fis);
-				changes = (List<IChange>) in.readObject();
-				famixEntities = (List<FamixObject>) in.readObject();
-
-				famixPackagesMap = (Map<String, FamixPackage>) in.readObject();
-				famixClassesMap = (Map<String, FamixClass>) in.readObject();
-				famixMethodsMap = (Map<String, FamixMethod>) in.readObject();
-				famixFieldsMap = (Map<String, FamixAttribute>) in.readObject();
-				famixInvocationsMap = (Map<String, FamixInvocation>) in.readObject();
-				famixVariablesMap = (Map<String, FamixLocalVariable>) in.readObject();
+				loadFamixEntities(in);
 
 				//TODO load maps
 				in.close();
 				// CheopsjLog.logInfo("Model Loaded");
 			} catch (IOException ex) {
 				// CheopsjLog.logError(ex);
-			} catch (ClassNotFoundException ex) {
-				// CheopsjLog.logError(ex);
 			}
 			fireChangesAdded(changes.toArray(new IChange[changes.size()]));
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void loadFamixEntities(ObjectInputStream in) {
+		try {
+			changes = (List<IChange>) in.readObject();
+			famixEntities = (List<FamixObject>) in.readObject();
+	
+			famixPackagesMap = (Map<String, FamixPackage>) in.readObject();
+			famixClassesMap = (Map<String, FamixClass>) in.readObject();
+			famixMethodsMap = (Map<String, FamixMethod>) in.readObject();
+			famixFieldsMap = (Map<String, FamixAttribute>) in.readObject();
+			famixInvocationsMap = (Map<String, FamixInvocation>) in.readObject();
+			famixVariablesMap = (Map<String, FamixLocalVariable>) in.readObject();
+		}
+		catch (IOException ex) {
+			// CheopsjLog.logError(ex);
+		} catch (ClassNotFoundException ex) {
+			// CheopsjLog.logError(ex);
 		}
 	}
 
@@ -438,75 +447,11 @@ public class ModelManager implements Serializable{
 			printStartOfGrooveGraph(out);
 
 			for(IChange change : changes){
-				printNodeInGrooveGraph(out, change.getID());
-				if(change instanceof Add){
-					printEdgeInGrooveGraph(out, change.getID(), change.getID(), "type:Add");	
-				}else if(change instanceof Remove){
-					printEdgeInGrooveGraph(out, change.getID(), change.getID(), "type:Rem");
-				}
-
-				String timestampID = change.getID() + "a0";
-				printNodeInGrooveGraph(out, timestampID);
-				printEdgeInGrooveGraph(out, timestampID, timestampID, "int:"+change.getTimeStamp().getTime());
-				printEdgeInGrooveGraph(out, change.getID(), timestampID, "timestamp");
-				//ditto for intent / user / & other metadata
+				printEdgesInGrooveChange(out, change);
 			}
 
 			for(FamixObject famix: famixEntities){
-				printNodeInGrooveGraph(out, famix.getID());
-
-				printEdgeInGrooveGraph(out, famix.getID(), famix.getID(), "type:"+famix.getFamixType());
-
-				//name ?
-				String nameID = famix.getID() + "a0";
-				printNodeInGrooveGraph(out, nameID);
-				if(famix instanceof FamixEntity){
-					printEdgeInGrooveGraph(out, nameID, nameID, "string:&quot;"+((FamixEntity)famix).getName()+"&quot;");
-				}else if(famix instanceof FamixInvocation){
-					//printEdgeInGrooveGraph(out, nameID, nameID, "string:&quot;"+((FamixInvocation)famix).getStringRepresentation()+":&quot;");
-				}
-				printEdgeInGrooveGraph(out, famix.getID(), nameID, "name");
-
-				if (famix instanceof FamixPackage) {
-					FamixPackage belongsTo = ((FamixPackage) famix).getBelongsToPackage();
-					if(belongsTo != null)				
-						printEdgeInGrooveGraph(out, famix.getID(), belongsTo.getID(), "belongsTo");
-				} else if (famix instanceof FamixClass) {
-					FamixPackage belongsTo = ((FamixClass) famix).getBelongsToPackage();
-					if(belongsTo != null)				
-						printEdgeInGrooveGraph(out, famix.getID(), belongsTo.getID(), "belongsTo");
-					FamixClass belongsToClass = ((FamixClass) famix).getBelongsToClass();
-					if(belongsToClass != null)
-						printEdgeInGrooveGraph(out, famix.getID(), belongsToClass.getID(), "belongsTo");
-				} else if (famix instanceof FamixMethod) {
-					FamixClass belongsToClass = ((FamixMethod) famix).getBelongsToClass();
-					if(belongsToClass != null)
-						printEdgeInGrooveGraph(out, famix.getID(), belongsToClass.getID(), "belongsTo");
-					FamixClass returnClass = ((FamixMethod) famix).getDeclaredReturnClass();
-					if(returnClass != null)
-						printEdgeInGrooveGraph(out, famix.getID(), returnClass.getID(), "returnClass");
-				} else if (famix instanceof FamixAttribute) {
-					FamixClass belongsToClass = ((FamixAttribute) famix).getBelongsToClass();
-					if(belongsToClass != null)
-						printEdgeInGrooveGraph(out, famix.getID(), belongsToClass.getID(), "belongsTo");
-					FamixClass declaredClass = ((FamixAttribute) famix).getDeclaredClass();
-					if(declaredClass != null)
-						printEdgeInGrooveGraph(out, famix.getID(), declaredClass.getID(), "declaredClass");
-				} else if (famix instanceof FamixInvocation) {
-					FamixBehaviouralEntity candidate = ((FamixInvocation) famix).getCandidate();
-					if(candidate != null)
-						printEdgeInGrooveGraph(out, famix.getID(), candidate.getID(), "candidate");
-					FamixMethod invokedby = (FamixMethod) ((FamixInvocation) famix).getInvokedBy();
-					printEdgeInGrooveGraph(out, famix.getID(), invokedby.getID(), "invokedBy");
-				} else if (famix instanceof FamixLocalVariable) {
-					FamixMethod belongsToMethod = (FamixMethod) ((FamixLocalVariable) famix).getBelongsToBehaviour();
-					if(belongsToMethod != null)
-						printEdgeInGrooveGraph(out, famix.getID(), belongsToMethod.getID(), "belongsTo");
-					FamixClass declaredClass = ((FamixLocalVariable) famix).getDeclaredClass();
-					if(declaredClass != null)
-						printEdgeInGrooveGraph(out, famix.getID(), declaredClass.getID(), "declaredClass");
-				}
-
+				printEdgesInGrooveFamix(famix, out);
 			}
 
 			for(IChange change : changes){
@@ -525,6 +470,88 @@ public class ModelManager implements Serializable{
 			e.printStackTrace();
 		}
 
+	}
+	
+	private void printEdgesInGrooveChange(BufferedWriter out, IChange change) {
+		try {
+			printNodeInGrooveGraph(out, change.getID());
+			if(change instanceof Add){
+				printEdgeInGrooveGraph(out, change.getID(), change.getID(), "type:Add");	
+			}else if(change instanceof Remove){
+				printEdgeInGrooveGraph(out, change.getID(), change.getID(), "type:Rem");
+			}
+	
+			String timestampID = change.getID() + "a0";
+			printNodeInGrooveGraph(out, timestampID);
+			printEdgeInGrooveGraph(out, timestampID, timestampID, "int:"+change.getTimeStamp().getTime());
+			printEdgeInGrooveGraph(out, change.getID(), timestampID, "timestamp");
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void printEdgesInGrooveFamix(FamixObject famix, BufferedWriter out) {
+		try {
+			printNodeInGrooveGraph(out, famix.getID());
+	
+			printEdgeInGrooveGraph(out, famix.getID(), famix.getID(), "type:"+famix.getFamixType());
+	
+			//name ?
+			String nameID = famix.getID() + "a0";
+			printNodeInGrooveGraph(out, nameID);
+			if(famix instanceof FamixEntity){
+				printEdgeInGrooveGraph(out, nameID, nameID, "string:&quot;"+((FamixEntity)famix).getName()+"&quot;");
+			}else if(famix instanceof FamixInvocation){
+				//printEdgeInGrooveGraph(out, nameID, nameID, "string:&quot;"+((FamixInvocation)famix).getStringRepresentation()+":&quot;");
+			}
+			printEdgeInGrooveGraph(out, famix.getID(), nameID, "name");
+	
+			if (famix instanceof FamixPackage) {
+				FamixPackage belongsTo = ((FamixPackage) famix).getBelongsToPackage();
+				if(belongsTo != null)				
+					printEdgeInGrooveGraph(out, famix.getID(), belongsTo.getID(), "belongsTo");
+			} else if (famix instanceof FamixClass) {
+				FamixPackage belongsTo = ((FamixClass) famix).getBelongsToPackage();
+				if(belongsTo != null)				
+					printEdgeInGrooveGraph(out, famix.getID(), belongsTo.getID(), "belongsTo");
+				FamixClass belongsToClass = ((FamixClass) famix).getBelongsToClass();
+				if(belongsToClass != null)
+					printEdgeInGrooveGraph(out, famix.getID(), belongsToClass.getID(), "belongsTo");
+			} else if (famix instanceof FamixMethod) {
+				FamixClass belongsToClass = ((FamixMethod) famix).getBelongsToClass();
+				if(belongsToClass != null)
+					printEdgeInGrooveGraph(out, famix.getID(), belongsToClass.getID(), "belongsTo");
+				FamixClass returnClass = ((FamixMethod) famix).getDeclaredReturnClass();
+				if(returnClass != null)
+					printEdgeInGrooveGraph(out, famix.getID(), returnClass.getID(), "returnClass");
+			} else if (famix instanceof FamixAttribute) {
+				FamixClass belongsToClass = ((FamixAttribute) famix).getBelongsToClass();
+				if(belongsToClass != null)
+					printEdgeInGrooveGraph(out, famix.getID(), belongsToClass.getID(), "belongsTo");
+				FamixClass declaredClass = ((FamixAttribute) famix).getDeclaredClass();
+				if(declaredClass != null)
+					printEdgeInGrooveGraph(out, famix.getID(), declaredClass.getID(), "declaredClass");
+			} else if (famix instanceof FamixInvocation) {
+				FamixBehaviouralEntity candidate = ((FamixInvocation) famix).getCandidate();
+				if(candidate != null)
+					printEdgeInGrooveGraph(out, famix.getID(), candidate.getID(), "candidate");
+				FamixMethod invokedby = (FamixMethod) ((FamixInvocation) famix).getInvokedBy();
+				printEdgeInGrooveGraph(out, famix.getID(), invokedby.getID(), "invokedBy");
+			} else if (famix instanceof FamixLocalVariable) {
+				FamixMethod belongsToMethod = (FamixMethod) ((FamixLocalVariable) famix).getBelongsToBehaviour();
+				if(belongsToMethod != null)
+					printEdgeInGrooveGraph(out, famix.getID(), belongsToMethod.getID(), "belongsTo");
+				FamixClass declaredClass = ((FamixLocalVariable) famix).getDeclaredClass();
+				if(declaredClass != null)
+					printEdgeInGrooveGraph(out, famix.getID(), declaredClass.getID(), "declaredClass");
+			}
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void printNodeInGrooveGraph(BufferedWriter out, String id) throws IOException{
