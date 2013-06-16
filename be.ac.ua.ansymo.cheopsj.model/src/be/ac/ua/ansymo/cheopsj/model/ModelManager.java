@@ -56,6 +56,7 @@ public class ModelManager implements Serializable{
 
 	//This list contains all FamixEntities
 	private List<FamixObject> famixEntities;
+
 	//This List contains all changes
 	private List<IChange> changes;
 	//This list contains all ModelManagerListeners, i.e. listeners that need to be notified when a new change was added to the model.
@@ -64,11 +65,15 @@ public class ModelManager implements Serializable{
 
 	//We also keep maps to specific FamixEntities to allow easier lookup.
 	private Map<String, FamixPackage> famixPackagesMap;
+
 	private Map<String, FamixClass> famixClassesMap;
 	private Map<String, FamixMethod> famixMethodsMap;
 	private Map<String, FamixAttribute> famixFieldsMap;
+
 	private Map<String, FamixInvocation> famixInvocationsMap;
+
 	private Map<String, FamixLocalVariable> famixVariablesMap;
+
 	//The modelmanager is a Singleton entity, hence the constructor is private.
 	//You should always call the static method getInstance() to get the ModelManager instance.
 	private static ModelManager INSTANCE = new ModelManager();
@@ -320,8 +325,35 @@ public class ModelManager implements Serializable{
 	private File getModelFile() {
 		return Activator.getDefault().getStateLocation().append("changemodel.ser").toFile();
 	}
+	
+	public Map<String, FamixPackage> getFamixPackagesMap() {
+		return famixPackagesMap;
+	}
 
+	public Map<String, FamixClass> getFamixClassesMap() {
+		return famixClassesMap;
+	}
 
+	public Map<String, FamixMethod> getFamixMethodsMap() {
+		return famixMethodsMap;
+	}
+	
+	public List<FamixObject> getFamixEntities() {
+		return famixEntities;
+	}
+	
+	public Map<String, FamixAttribute> getFamixFieldsMap() {
+		return famixFieldsMap;
+	}
+	
+	public Map<String, FamixLocalVariable> getFamixVariablesMap() {
+		return famixVariablesMap;
+	}
+	
+	public Map<String, FamixInvocation> getFamixInvocationsMap() {
+		return famixInvocationsMap;
+	}
+	
 	// /////////////////////////////////////////////////////////////////////////
 	//
 	// Searching the Maps for specific FamixEntities
@@ -343,7 +375,7 @@ public class ModelManager implements Serializable{
 		return null;
 
 	}
-
+	
 	/**
 	 * @param elementName
 	 * @return
