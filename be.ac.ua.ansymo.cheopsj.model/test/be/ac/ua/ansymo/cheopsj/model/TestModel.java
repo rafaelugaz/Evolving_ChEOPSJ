@@ -2,15 +2,21 @@ package be.ac.ua.ansymo.cheopsj.model;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import be.ac.ua.ansymo.cheopsj.model.changes.Add;
+import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Change;
+import be.ac.ua.ansymo.cheopsj.model.changes.CompositeChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
+import be.ac.ua.ansymo.cheopsj.model.changes.Remove;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixAttribute;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixInvocation;
@@ -60,7 +66,6 @@ public class TestModel {
 		
 		for(FamixObject fe : fes) {
 			sizeFamEnt = model.getFamixEntities().size();
-			System.out.println(sizeFamEnt);
 			model.addFamixElement(fe);
 			
 			if (fe instanceof FamixPackage) {
@@ -95,9 +100,75 @@ public class TestModel {
 			}
 			
 			assertTrue(!model.getFamixEntities().isEmpty());
-			System.out.println(model.getFamixEntities().size());
 			assertTrue(model.getFamixEntities().size() == (sizeFamEnt + 1));
 		}
 	}
+	
+	/*
+	@SuppressWarnings("rawtypes")
+	@Test
+	public void testLoadModel() throws NoSuchMethodException, SecurityException, 
+	IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		
+		model.loadModel();
+		
+	}*/
+	
+	@Test
+	public void testGetSummary() {
+		model.addChange(new Change());
+		model.addChange(new Add());
+		model.addChange(new Add());
+		model.addChange(new Remove());
+		model.addChange(new Remove());
+		model.addChange(new Remove());
+		model.addChange(new AtomicChange());
+		model.addChange(new CompositeChange());
+		model.addChange(new CompositeChange());
+		
+		int changeCountLoc = model.getChanges().size();
+		String result;
+		int changeCount, addCount, removeCount;
+		int addCountLoc = 0, removeCountLoc = 0;
+		
+		assertTrue(changeCountLoc >= 0);
+		
+		for(IChange change: model.getChanges()){
+			if(change instanceof Add){
+				addCountLoc++;
+			}else if(change instanceof Remove){
+				removeCountLoc++;
+			}
+		}
+		
+		result = model.getSummary();
+		
+		String[] res_parts = result.split(" ");
+		changeCount = Integer.parseInt(res_parts[0]);
+		addCount = Integer.parseInt(res_parts[2]);
+		removeCount = Integer.parseInt(res_parts[5]);
+		
+		assertTrue(changeCountLoc == changeCount);
+		assertTrue(addCountLoc == addCount);
+		assertTrue(removeCountLoc == removeCount);
+		assertTrue(changeCount >= (addCount + removeCount));
+	}
+	
+	/*
+	@SuppressWarnings("rawtypes")
+	@Test
+	public void testTest() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		Class[] paramOIS = new Class[1];	
+		paramOIS[0] = Integer.TYPE;
+		Class<?> noparams[] = {};
+		int a = 2, b;
+		
+		Method loadFamixEntitiesMethod = 
+				ModelManager.class.getDeclaredMethod("test", noparams);
+		loadFamixEntitiesMethod.setAccessible(true);
+		
+		b = (Integer) loadFamixEntitiesMethod.invoke(model, null);
+		assertTrue(b == (5));
+	}*/
 
 }

@@ -284,7 +284,7 @@ public class ModelManager implements Serializable{
 		// CheopsjLog.logInfo("Loading Model");
 		File file = getModelFile();
 		if(file.exists()){
-
+			
 			FileInputStream fis = null;
 			ObjectInputStream in = null;
 			try {
@@ -352,6 +352,10 @@ public class ModelManager implements Serializable{
 	
 	public Map<String, FamixInvocation> getFamixInvocationsMap() {
 		return famixInvocationsMap;
+	}
+	
+	public List<ModelManagerListener> getListeners() {
+		return listeners;
 	}
 	
 	// /////////////////////////////////////////////////////////////////////////
@@ -616,6 +620,4 @@ public class ModelManager implements Serializable{
 		out.write("\t</graph>\n");
 		out.write("</gxl>");
 	}
-
-
 }
