@@ -1,3 +1,5 @@
+~~~~~~~~~~~~~~~~ Look for the Contracts ~~~~~~~~~~~~~~~~
+
 In the class AbstractEntityRecorder there is a method to store every change (storeChange). This method is call every time a change have to be stored. That is, in the Distiller we need to store changes in the classes ChangeExtractor (with all methods like "store-") and DistillAditionsFromCurrentVersion (with all methods like "make-addition"). On the other hand, in the Logger, the class ChangeRecorder needs to store every change whitch is made with the method "storeChange". All of these methods call the method "storeChange" from the class AbstractEntityRecorder to store each change. Then the responsability of this method is just store the information of each change is made.
 
 Moreover, the method storeChange from AbstractEntityRecorder achieve his responsability of store a change calling two methods whitch he declared but are implemented by every subclass of AbstractEntityRecorder. That is, every entity class inherits from AbstractEntityRecorder and implements these two methods ("createAndLinkFamixElement" and "createAndLinkChange").
@@ -5,3 +7,16 @@ Moreover, the method storeChange from AbstractEntityRecorder achieve his respons
 The method createAndLinkFamixElement has the responsability of create (if it does not exist) the proper famix object and link it. The method createAndLinkChange has the responsability of create the change and link it to the manager and famix objects.
 
 In the class ModelManager, the method getInstance has the responsability of give the instance respecting the singleton. The methods "addFamixElement", "famix-Exists" and "getFamix-" have the responsabilities of add, check whether exists and return a famix entity respectively. These methods are called from "createAndLinkFamixElement" in every entity recorder. Furthermore, the method "createAndLinkChange" from all of entity recorders call the method "addChange", whitch has the responsability of add the change to the list of changes in ModelManager.
+
+
+
+~~~~~~~~~~~~~~~~ Step Through the Execution ~~~~~~~~~~~~~~~~
+
+To check whether the contracts are correct we debuged with breakpoints in the method "storeChange" from AbstractEntityRecorder. Every entity (class, method, variable, etc) called this method for every change made. "storeChange" goes through "createAndLinkFamixElement" and "createAndLinkChange" to record the change. 
+
+	"createAndLinkFamixElement" calls "Famix-Exists" to check whether the famix entity exists, if it doesn't exist it's created and "AddFamixElement" link the famix entity with the manager. "getFamix-" is called if the famix entity already exist to get the instance and undummy it.
+	
+	"createAndLinkChange" calls "addChange" to add the change to the list of changes in ModelManager.
+
+
+
