@@ -56,12 +56,6 @@ public class ModelManager implements Serializable{
 	//This list contains all FamixEntities
 	private List<FamixObject> famixEntities;
 
-	//This List contains all changes
-	private List<IChange> changes;
-	//This list contains all ModelManagerListeners, i.e. listeners that need to be notified when a new change was added to the model.
-	//For instance the views in the ...model.ui plugin
-	//private ModelManagerListeners modManListeners;
-
 	//We also keep maps to specific FamixEntities to allow easier lookup.
 	private Map<String, FamixPackage> famixPackagesMap;
 
@@ -78,9 +72,7 @@ public class ModelManager implements Serializable{
 	private static ModelManager INSTANCE = null;
 
 	private ModelManager() {
-		changes = new ArrayList<IChange>();
 		famixEntities = new ArrayList<FamixObject>();
-		//modManListeners = new ModelManagerListeners();
 
 		famixPackagesMap = new HashMap<String, FamixPackage>();
 		famixClassesMap = new HashMap<String, FamixClass>();
@@ -109,7 +101,7 @@ public class ModelManager implements Serializable{
 	 * @return the list of changes maintained in the ModelManager
 	 */
 	public List<IChange> getChanges() {
-		return changes;
+		return getModManChange().getChanges();
 	}
 
 	/**
@@ -117,10 +109,7 @@ public class ModelManager implements Serializable{
 	 * @param change
 	 */
 	public void addChange(Change change) {
-		//add change to list
-		changes.add(change);
-		//alert listeners that a change was added
-		getModManListeners().fireChangeAdded(change);
+		getModManChange().addChange(change);
 	}
 
 
@@ -130,18 +119,7 @@ public class ModelManager implements Serializable{
 	 * @return a string containing the counted changes
 	 */
 	public String getSummary() {
-		int changeCount = changes.size();
-		int addCount = 0;
-		int removeCount = 0;
-		for(IChange change: changes){
-			if(change instanceof Add){
-				addCount++;
-			}else if(change instanceof Remove){
-				removeCount++;
-			}
-		}
-
-		return changeCount + " changes; " + addCount + " additions and " + removeCount + " removals";
+		return getModManChange().getSummary();
 	}
 
 
@@ -224,7 +202,7 @@ public class ModelManager implements Serializable{
 		try {
 			fos = new FileOutputStream(file);
 			out = new ObjectOutputStream(fos);
-			out.writeObject(changes);
+			out.writeObject(getModManChange().getChanges());
 			out.writeObject(famixEntities);
 
 			out.writeObject(famixPackagesMap);
@@ -259,14 +237,19 @@ public class ModelManager implements Serializable{
 			} catch (IOException ex) {
 				// CheopsjLog.logError(ex);
 			}
-			getModManListeners().fireChangesAdded(changes.toArray(new IChange[changes.size()]));
+			getModManListeners().fireChangesAdded(
+					getModManChange().getChanges().toArray(
+							new IChange[getModManChange().getChanges().size()]));
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
 	private void loadFamixEntities(ObjectInputStream in) {
 		try {
+			List<IChange> changes = getModManChange().getChanges();
 			changes = (List<IChange>) in.readObject();
+			getModManChange().setChanges(changes);
+			
 			famixEntities = (List<FamixObject>) in.readObject();
 	
 			famixPackagesMap = (Map<String, FamixPackage>) in.readObject();
@@ -317,6 +300,10 @@ public class ModelManager implements Serializable{
 	
 	public ModelManagerListeners getModManListeners() {
 		return ModelManagerListeners.getInstance();
+	}
+	
+	public ModelManagerChange getModManChange() {
+		return ModelManagerChange.getInstance();
 	}
 	
 	// /////////////////////////////////////////////////////////////////////////
@@ -443,7 +430,7 @@ public class ModelManager implements Serializable{
 			BufferedWriter out = new BufferedWriter(fstream);
 			printStartOfGrooveGraph(out);
 
-			for(IChange change : changes){
+			for(IChange change : getModManChange().getChanges()){
 				printEdgesInGrooveChange(out, change);
 			}
 
@@ -451,7 +438,7 @@ public class ModelManager implements Serializable{
 				printEdgesInGrooveFamix(famix, out);
 			}
 
-			for(IChange change : changes){
+			for(IChange change : getModManChange().getChanges()){
 				for(Change dep : ((AtomicChange)change).getStructuralDependencies()){
 					printEdgeInGrooveGraph(out, change.getID(), dep.getID(), "depends");
 				}
