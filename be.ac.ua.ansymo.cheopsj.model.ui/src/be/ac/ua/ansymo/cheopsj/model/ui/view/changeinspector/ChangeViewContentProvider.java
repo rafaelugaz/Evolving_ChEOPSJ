@@ -34,10 +34,10 @@ public class ChangeViewContentProvider implements IStructuredContentProvider,
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		this.viewer = (TableViewer) viewer;
 		if (manager != null)
-			manager.removeModelManagerListener(this);
+			manager.getModManListeners().removeModelManagerListener(this);
 		manager = (ModelManager) newInput;
 		if (manager != null)
-			manager.addModelManagerListener(this);
+			manager.getModManListeners().addModelManagerListener(this);
 	}
 
 	public void dispose() {

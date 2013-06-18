@@ -30,7 +30,6 @@ import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Change;
 import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Remove;
-import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixAttribute;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixBehaviouralEntity;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
@@ -61,8 +60,7 @@ public class ModelManager implements Serializable{
 	private List<IChange> changes;
 	//This list contains all ModelManagerListeners, i.e. listeners that need to be notified when a new change was added to the model.
 	//For instance the views in the ...model.ui plugin
-	//private List<ModelManagerListener> listeners;
-	private ModelManagerListeners modManListeners;
+	//private ModelManagerListeners modManListeners;
 
 	//We also keep maps to specific FamixEntities to allow easier lookup.
 	private Map<String, FamixPackage> famixPackagesMap;
@@ -82,8 +80,7 @@ public class ModelManager implements Serializable{
 	private ModelManager() {
 		changes = new ArrayList<IChange>();
 		famixEntities = new ArrayList<FamixObject>();
-		//listeners = new ArrayList<ModelManagerListener>();
-		modManListeners = new ModelManagerListeners();
+		//modManListeners = new ModelManagerListeners();
 
 		famixPackagesMap = new HashMap<String, FamixPackage>();
 		famixClassesMap = new HashMap<String, FamixClass>();
@@ -95,7 +92,7 @@ public class ModelManager implements Serializable{
 	}
 
 	/**
-	 * The ModelManger is a Singleton entity. Therefor the constructor is private.
+	 * The ModelManger is a Singleton entity. Therefore the constructor is private.
 	 * This method returns an instance of the ModelManger. If no instance existed 
 	 * before it will call the private constructor to create a new instance. Else
 	 * It will return the existing instance. 
@@ -123,17 +120,7 @@ public class ModelManager implements Serializable{
 		//add change to list
 		changes.add(change);
 		//alert listeners that a change was added
-		fireChangeAdded(change);
-	}
-
-	//One change added to ModelManager, this method is used to interate the ModelMangerListeners and notify them.
-	private void fireChangeAdded(IChange newChange) {
-		modManListeners.fireChangeAdded(newChange);
-	}
-
-	//Several changes added to ModelManager, this method is used to interate the ModelMangerListeners and notify them.
-	private void fireChangesAdded(IChange[] newChanges) {
-		modManListeners.fireChangesAdded(newChanges);
+		getModManListeners().fireChangeAdded(change);
 	}
 
 
@@ -204,25 +191,6 @@ public class ModelManager implements Serializable{
 			return null;
 	}*/
 
-
-	/**
-	 * Add a listener to the modelmanager, this listener will be updated when a change is added to the model.
-	 * @param listener
-	 */
-	public void addModelManagerListener(ModelManagerListener listener) {
-		modManListeners.addModelManagerListener(listener);
-	}
-
-	/**
-	 * remove a given listener
-	 * @param listener
-	 */
-	public void removeModelManagerListener(ModelManagerListener listener) {
-		modManListeners.removeModelManagerListener(listener);
-	}
-
-
-
 	/*
 	 * For testing purposes only!
 	 */
@@ -291,7 +259,7 @@ public class ModelManager implements Serializable{
 			} catch (IOException ex) {
 				// CheopsjLog.logError(ex);
 			}
-			fireChangesAdded(changes.toArray(new IChange[changes.size()]));
+			getModManListeners().fireChangesAdded(changes.toArray(new IChange[changes.size()]));
 		}
 	}
 	
@@ -347,8 +315,8 @@ public class ModelManager implements Serializable{
 		return famixInvocationsMap;
 	}
 	
-	public List<ModelManagerListener> getListeners() {
-		return modManListeners.getListeners();
+	public ModelManagerListeners getModManListeners() {
+		return ModelManagerListeners.getInstance();
 	}
 	
 	// /////////////////////////////////////////////////////////////////////////

@@ -11,8 +11,26 @@ public class ModelManagerListeners {
 	//For instance the views in the ...model.ui plugin
 	private List<ModelManagerListener> listeners;
 	
+	//The ModelManagerListeners is a Singleton entity, hence the constructor is private.
+	//You should always call the static method getInstance() to get the ModelManager instance.
+	private static ModelManagerListeners INSTANCE = null;
+	
 	public ModelManagerListeners() {
 		listeners = new ArrayList<ModelManagerListener>();
+	}
+	
+	/**
+	 * The ModelManagerListeners is a Singleton entity. Therefore the constructor is private.
+	 * This method returns an instance of the ModelManagerListeners. If no instance existed 
+	 * before it will call the private constructor to create a new instance. Else
+	 * It will return the existing instance. 
+	 *  
+	 * @return the Singleton ModelManager instance
+	 */
+	public static ModelManagerListeners getInstance() {
+		if (INSTANCE == null)
+			INSTANCE = new ModelManagerListeners();
+		return INSTANCE;
 	}
 	
 	public List<ModelManagerListener> getListeners() {

@@ -48,12 +48,12 @@ public class ZestChangeViewContentProvider implements IGraphEntityContentProvide
 
 		this.viewer = (GraphViewer) viewer;
 		if (manager != null)
-			manager.removeModelManagerListener(this);
+			manager.getModManListeners().removeModelManagerListener(this);
 
 		manager = (ModelManager) newInput;
 
 		if (manager != null)
-			manager.addModelManagerListener(this);
+			manager.getModManListeners().addModelManagerListener(this);
 
 	}
 
