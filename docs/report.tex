@@ -2,7 +2,7 @@
 \usepackage{verbatim}
 \usepackage{graphicx}
 
-\title{Software Reengineering Project \\ Evolving ChEOPSJ: from a prototype to a tool}
+\title{Software Reengineering Project \\ Evolving \emph{ChEOPSJ}: from a prototype to a tool}
 \author{Alejandro Merlo\\ Viktor Stojkovski\\ Rafael Ugaz}
 \date{June, 2013}
 
@@ -19,7 +19,8 @@ text
 text
 
 \subsection{Read all the code in one hour}
-For this task we saw that the ChEOPSJ system is split into ten projects, so we decided to divide them among the three members of our group. Each member read the code of their corresponding projects in around one hour and took notes. Then we explained our findings to the rest of the group and merged the notes together to produce the report shown below. Because of the `time is scarce' principle, we payed more attention to the following items, as it is proposed in \cite{demeyer02}:
+\label{sec:codeOneHour}
+For this task we saw that the \emph{ChEOPSJ} system is split into ten projects, so we decided to divide them among the three members of our group. Each member read the code of their corresponding projects in around one hour and took notes. Then we explained our findings to the rest of the group and merged the notes together to produce the report shown below. Because of the `time is scarce' principle, we payed more attention to the following items, as it is proposed in \cite{demeyer02}:
 \begin{itemize}
 \item Abstract classes and methods, that reveal design intentions.
 \item Classes high in the hierarchy, which often define domain abstractions; their subclasses introduce variations on a theme.
@@ -32,7 +33,7 @@ The notes taken, separated by project and ordered alphabetically, are the follow
 
 % cheopsj
 \subsubsection{be.ac.ua.ansymo.cheopsj}
-The project \emph{be.ac.ua.ansymo.cheopsj} only contains the feature.xml file with references to all the other plugins which groups them together as a whole as the ChEOPSJ plugin for Eclipse. Most of the other plug-in projects contain an Activator class that controls the project's plug-in life cycle.
+The project \emph{be.ac.ua.ansymo.cheopsj} only contains the feature.xml file with references to all the other plugins which groups them together as a whole as the \emph{ChEOPSJ} plugin for Eclipse. Most of the other plug-in projects contain an Activator class that controls the project's plug-in life cycle.
 
 \subsubsection{be.ac.ua.ansymo.cheopsj.branding}
 % branding
@@ -51,7 +52,7 @@ The tests found check if the change recorders work correctly for additions and r
 
 % distiller	
 \subsubsection{be.ac.ua.ansymo.cheopsj.distiller}
-In \emph{be.ac.ua.ansymo.cheopsj.distiller} one of the main functionalities of ChEOPSJ is implemented. The one of extracting the changes from an existing java project. This is done by connecting to a SVN repository and then \emph{distilling} the changes that happen in each revision by means of an external library ChangeDistiller from the Evolizer platform.
+In \emph{be.ac.ua.ansymo.cheopsj.distiller} one of the main functionalities of \emph{ChEOPSJ} is implemented. The one of extracting the changes from an existing java project. This is done by connecting to a SVN repository and then \emph{distilling} the changes that happen in each revision by means of an external library ChangeDistiller from the Evolizer platform.
 
 In the \emph{distiller.cd} package, the class ChangeDistillerProxy accesses the API of the ChangeDistiller library to extract the source code changes from two java files.
 
@@ -63,7 +64,7 @@ There are no tests present in this project.
 
 % logger	
 \subsubsection{be.ac.ua.ansymo.cheopsj.logger}
-The \emph{be.ac.ua.ansymo.cheopsj.logger} project takes care of the second main functionaility of ChEOPSJ which is to \emph{log} new changes made to the workspace by the user. In the \emph{logger} package, there are some classes for the initialization of the plug-in on Eclipse. It is important to note that the Cheopsj class employs the singleton pattern which means it is constant during the entire execution of the system.
+The \emph{be.ac.ua.ansymo.cheopsj.logger} project takes care of the second main functionaility of \emph{ChEOPSJ} which is to \emph{log} new changes made to the workspace by the user. In the \emph{logger} package, there are some classes for the initialization of the plug-in on Eclipse. It is important to note that the Cheopsj class employs the singleton pattern which means it is constant during the entire execution of the system.
 
 The \emph{logger.astdiffer} package contains the classes ASTComparator and DiffVisitor, the first class instantiates the second in order to obtain the differences of two input Abstract Syntax Trees (AST), which are instances of the eclipse internal class CompilationUnit. The objective of this classes seems to be to compare two states of a workspace or compilation unit and in this way identify (and log) the changes that the user has made.
 
@@ -98,27 +99,36 @@ There are no tests present in this project.
 
 % testtool
 \subsubsection{be.ac.ua.ansymo.cheopsj.testtool}
-The plugin implemented in \emph{be.ac.ua.ansymo.cheopsj.testtool} is used for finding tests relevant to a set of changes. This is another mentioned functionality of ChEOPSJ, namely to provide the user the tests that depend on an entity (e.g. class or method) and that would have to be checked for correctness after that entity has been modified. From the comments we can see that the functionality of the main method findTests is to, first, find the method where the selected change is in and, second, find the tests that call that method, in other words the relevant tests.
+The plugin implemented in \emph{be.ac.ua.ansymo.cheopsj.testtool} is used for finding tests relevant to a set of changes. This is another mentioned functionality of \emph{ChEOPSJ}, namely to provide the user the tests that depend on an entity (e.g. class or method) and that would have to be checked for correctness after that entity has been modified. From the comments we can see that the functionality of the main method findTests is to, first, find the method where the selected change is in and, second, find the tests that call that method, in other words the relevant tests.
 
 There are no tests present in this project.
 
 % update
 \subsubsection{be.ac.ua.ansymo.cheopsj.update}
-The project \emph{be.ac.ua.ansymo.cheopsj.update} contains information about the update site of the ChEOPSJ plugin
+The project \emph{be.ac.ua.ansymo.cheopsj.update} contains information about the update site of the \emph{ChEOPSJ} plugin
 
 % evolizer.changedistiller
 \subsubsection{org.evolizer.changedistiller}
 The project \emph{org.evolizer.changedistiller} contains the external library for extracting source code changes from two java files used in the \emph{be.ac.ua.ansymo.cheopsj.distiller} project.
 
 \subsubsection{Conclusion}
-In conclusion, the naming conventions of the whole workspace seem appropriate and help understanding the code much faster. The separation of classes into projects and into packages also states the intention of each group of classes more clearly. The comments could be better, but then again because of the facts just mentioned, they are not always needed. Finally, only two projects (changerecorders and logger) contain tests, the logger is an important part of ChEOPSJ because it implements on of its main functionalities i.e. logging new changes for a project. In the other hand, the distiller project takes care of the other main functionality of ChEOPSJ, which is distilling changes from an existing project, but it does not contain tests. It is possible that we will need to implement tests for this project in the future. The model project seems also very relevant (specially the model manager) and does not have any tests either.
+In conclusion, the naming conventions of the whole workspace seem appropriate and help understanding the code much faster. The separation of classes into projects and into packages also states the intention of each group of classes more clearly. The comments could be better, but then again because of the facts just mentioned, they are not always needed. Finally, only two projects (changerecorders and logger) contain tests, the logger is an important part of \emph{ChEOPSJ} because it implements on of its main functionalities i.e. logging new changes for a project. In the other hand, the distiller project takes care of the other main functionality of \emph{ChEOPSJ}, which is distilling changes from an existing project, but it does not contain tests. It is possible that we will need to implement tests for this project in the future. The model project seems also very relevant (specially the model manager) and does not have any tests either.
 
 \subsection{Skim the Documentation}
+We could not really apply this pattern because of the scarce documentation found for the project. The assignment website and the project's site provide information on the features the \emph{ChEOPSJ} plugin performs but not how it performs them. An image which we found useful to get a big picture of how the different subsystems are integrated can be seen in Figure \ref{fig:skim}
 
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{Images/skim}
+\caption{A big picture view of how the subsystems of \emph{ChEOPSJ} interact}
+\label{fig:spec0}
+\end{figure}
 
 \subsection{Interview During Demo}
+This pattern was also not fully applied because we did not perform an interview during a demo. We found a demo recorded as a video on the website of the project, and also saw some screenshots of it in action. Finally we tried the plugin ourselves doing a Mock Installation like it is explained in Section \ref{sec:mock}.
 
 \subsection{Do a Mock Installation}
+\label{sec:mock}
 The first time we tried build the system in eclipse, we encountered some errors that prevented us doing it. A few plug-ins were missing, namely the SVN Team Provider and also the SWT library was not found in our Eclipse installation. After we solved this two problems all the errors disappeared and we were able to build the system. 
 
 With the system running, we added a mock project to the workspace along with some packages and classes to see the functionality of the system. We noticed from the console that some exceptions were thrown while adding new elements in the java editor saying that the elements could not be found. It would appear that the system tries to locate this elements in real-time while the user is not finished defining them in the editor.
@@ -126,20 +136,20 @@ With the system running, we added a mock project to the workspace along with som
 \section{Initial Understanding}
 
 \subsection{Speculate about Design}
-Because our goal is to restructure ChEOPSJ to support recording changes of more fine-grained level of detail, we focused on the design of the recording of changes. This process is relevant for two of the main functionalities of ChEOPSJ, logging of new changes as well as extracting changes from an existing project.
+Because our goal is to restructure \emph{ChEOPSJ} to support recording changes of more fine-grained level of detail, we focused on the design of the recording of changes. This process is relevant for two of the main functionalities of \emph{ChEOPSJ}, logging of new changes as well as extracting changes from an existing project.
 
 \subsubsection{First class diagram}
-With our understanding of the system, we recognized three main actors involved in this process: a change, the element that suffers the change and a change recorder that creates these two objects in some way. This can be seen in the first class diagram that we designed, shown in Figure \ref{fig:spec1}.
+With our understanding of the system, we recognized three main actors involved in this process: a change, the element that suffers the change and a change recorder that creates these two objects in some way. This can be seen in the first class diagram that we designed, shown in Figure \ref{fig:spec0}.
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.8\textwidth]{Images/spec0}
-\caption{Initial design speculation about recording of changes.}
-\label{fig:spec1}
+\caption{Initial design speculation about recording of changes}
+\label{fig:skim}
 \end{figure}
 
 \subsubsection{Second class diagram}
-After examinating the code for mismatches with the initial hypothesis, we adapted the class diagram in several ways, as can be seen in Figure \ref{fig:spec2}:
+After examinating the code for mismatches with the initial hypothesis, we adapted the class diagram in several ways, as can be seen in Figure \ref{fig:spec1}:
 
 \begin{itemize}
 \item First, we renamed the ChangeRecorder to AbstractEntityRecorder, which is at the top of the hierarchy of all change recorder classes. We also added some of the subclasses of this hierarchy like PackageRecorder, MethodRecorder and ClassRecorder. The way this AbstractEntityRecorder is invoked and by which class is still pending.
@@ -154,37 +164,97 @@ After examinating the code for mismatches with the initial hypothesis, we adapte
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.8\textwidth]{Images/spec1}
-\caption{Second design speculation about recording of changes.}
+\caption{Second design speculation about recording of changes}
 \label{fig:spec1}
 \end{figure}
 
+\subsubsection{Third class diagram}
+After one last examination of the code we could answer the question remaining of when and how the AbstractEntityRecorders where instantiated. We found out that this is done by the ChangeRecorder class in the \emph{be.ac.ua.ansymo.cheopsj.logger} package, which in turn is triggered by an event fired by the eclipse framework class org.eclipse.jdt.core.JavaCore. This can be seen in Figure \ref{fig:spec2b}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{Images/spec2b}
+\caption{Third design speculation about recording of changes}
+\label{fig:spec2b}
+\end{figure}
+
 \subsection{Study the Exceptional Entities}
-For finding and defining the potential design flaws we have used the tool inFusion which was introduced to us on one of the laboratory sessions. We found this tool very useful in detecting and also graphically representing the results of its analysis of the structure and design of the ChEOPSJ plugin. In the following section we are going to present and describe our findings regarding the exceptional entities.
+We applied this pattern to identify potential design problems related to the feature we want to reengineer. For this task we used inFusion metrics tool which we first tried in one of the lab sessions. We found this tool very useful because of the many graphical and intuitive ways it presents the results of the analyses it performs. In this section we will present and interpret three different measurements that will hopefully give us a good idea of the potential design problems in the project. 
 
-InFusion for general grading of the system uses a Quality Deficit Index (QDI), which in our case is 14.1. In the documentation for the tool it is described that the bigger the QDI is, the more significant design problems the tool has found. Among the other important statistics the number of Design Flaws is worth mentioning and inFusion has found 26 of them in our case. The tool has also found 2 God Classes: ModelManager from the package model and the ClassRecorder class from the changerecorders package. This was expected because the both classes are very large and they use many attributes from external classes.
+The \emph{Overview Pyramid} provides a more general overview of relevant metrics of the project (e.g. lines of code, number of methods, number of classes), the \emph{Class Size Overview} provides a graphical representation of the sizes of the different classes in the project and the \emph{Class Inheritance} measurement provides, also graphically, an overview of all the hierarchies found in the project.
 
-One very useful feature of the inFusion tool is the interpretation of the information collected from the workspace and is based on combination of mathematical formulas which as an input take different measures like Lines of Code (LOC), Number of Packages (NOP) etc. InFusion reported that:
+% QDI and Design Flaws
+\subsubsection{QDI and Design Flaws}
+First, a small note on two extra measurements that inFusion provides. For general grading of the system, inFusion employs a Quality Deficit Index (QDI), which for the initial \emph{ChEOPSJ} project is 14.1. In the documentation for the tool it is explained that the bigger the QDI is, the more significant the design problems are that the tool found. It is also worth mentioning the Number of Design Flaws, which are 26 for the initial project. Among them, two God Classes: the ModelManager class from the \emph{be.ac.ua.ansymo.cheopsj.model} package and the ClassRecorder class from the \emph{be.ac.ua.ansymo.cheopsj.changerecorders} package. Both of them are relevant to the feature we want to reengineer and are certainly exceptional entities so further analysis will be required.
 
+%NDD = Average number of direct descendants 
+%HIT = Average height of the inheritance tree
+%NOP = Number of Packages
+%NOC = Number of Classes
+%NOM = Number of Methods
+%LOC = Number of Lines of Code
+%CYCLO = Sum of McCabe’s Cyclomatic Complexity for all methods
+%CALL = Number of Operation Calls 
+%FOUT = FANOUT = Number of Called Classes
+\subsubsection{Overview Pyramid}
+The Overview Pyramid for the \emph{ChEOPSJ} project can be seen in Figure \ref{fig:pyramid}.
+A red color on a metric means a potential negative quantity, blue not negative or positive and green means a potential positive one.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\textwidth]{Images/overviewPyramid}
+\caption{Overview Pyramid for the \emph{ChEOPSJ} project by the inFusion tool}
+\label{fig:pyramid}
+\end{figure}
+
+From the pyramid overview the following information can be intepreted:
 \begin{itemize}
-  \item Class hierarchies are very tall, which means that the inheritance trees have big depths. This statement is true because during the going through the code in one hour we have seen that the hierarchy in the packages model.famix and changerecoreders is pretty large.
-  \item The classes have an average number of methods and also there are not many classes per package, which is true and is positive aspect of the system. It means that the functionalities of the classes are very good divided in methods and also the classes are very well grouped and divided in packages according to their functionalities.
-  \item Methods are long because there are approximately 12 lines of code per method, but on the other hand their logic is simple because there are not many conditional branches in the methods, which is true. Another anomaly that the methods have is the high coupling intensity which means that many other methods are called inside the current method and that makes the code rather complex.
+  \item Class hierarchies are very tall, as it can be seen in the average height of inheritance trees (HIT) metric which is colored red with a value of 2.25. The class hierarchies are also of average width, which is good, because the average number of direct descendants (NDD) is 0.33. This observation can be seen with more detail with the Class Inheritance visualization in section \ref{sec:classInheritance}.
+  \item Classes have an average number of methods (5.51) and are organized in rather fine-grained packages, in other words there are few classes per package. We noticed the latter while Reading The Code In One Hour in section \ref{sec:codeOneHour} which made the initial understanding of the system easier because of the good division of classes in the packages.
+  \item Methods are rather long (12 lines of code per method in average), but on the other hand their logic is simple because there are not many conditional branches in the methods. This is calculated by dividing the total lines of code (LOC) by the cyclomatic complexity (CYCLO). Methods also have high coupling intensity which means that they call many methods, the number of methods (NOM) divided by the operation calls (CALL) is high.
 \end{itemize}
 
-Furthermore, as we suspected inFusion discovered the class ModelManager from the package cheopsj.model as a God class. This class is one of the largest and most complex classes in the whole system. Its job is to store and maintain every famix element created and also take care of all the changes created by the change recorders, that is the reason why this class is very complex and its coupling with the rest of the system is very high. On Figure \ref{fig:spec2} the graphical representation of the whole model package can be seen, where the ModelManager class is located in the left-bottom corner, colored with strong red color. Judging by the hight, width and color of the class (which represent the number of methods, attributes and design flaws respectfully) it can be concluded that the class ModelManager is a God Class indeed.
+\newpage % remove
+\subsubsection{Class Size Overview}
+To get an impression of the size and complexity of the classes constituting \emph{ChEOPSJ}, we used the Package Map view of the inFusion tool. This view presents all the classes grouped in their respective packages. Each class is represented by a rectangle where the width is the amount of attributes and the height the amount of methods it contains. This Package Map can be seen in Figure \ref{fig:sizeOverview}. Three potential exceptional entities are labeled in it which we will discuss further in this section.
+
+The FamixPackage class is taller than the other classes in it's package, which means that it contains more methods. Upon closer examination in the source code we saw that these extra methods for managing the entities contained in it. This makes sense because the package is the highest level entity in a workspace and can contain all the others entities (e.g. classes, variables).
+
+The Change class also stands out from the other classes in that it is tall and wide compared to the rest. After examining the source code we saw that all the methods are actually getters and setters and that this class does not contain much actual behavior. It is used more for storing properties of a change, like its time stamp, its intent and its dependencies -- therefore its larger width.
+
+The ModelManager class is perhaps the most exceptional class, in its size showed in the Package Map as well as in its source code. The model manager keeps track of all the famix entities in HashMap datastructures, so it contains many attributes as well as getter and setter methods for those attributes. 
+
+This class is also labeled as a God Class by the inFusion tool.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=1\textwidth]{Images/classSizeOverview}
+\caption{Class size overview}
+\label{fig:sizeOverview}
+\end{figure}
+
+\subsubsection{Class Inheritance}
+\label{sec:classInheritance}
+
+% God class ModelManager
+Furthermore, as we suspected inFusion discovered the class ModelManager from the package cheopsj.model as a God class. This class is one of the largest and most complex classes in the whole system. Its job is to store and maintain every famix element created and also take care of all the changes created by the change recorders, that is the reason why this class is very complex and its coupling with the rest of the system is very high. On Figure \ref{fig:godClassMM} the graphical representation of the whole model package can be seen, where the ModelManager class is located in the left-bottom corner, colored with strong red color. Judging by the hight, width and color of the class (which represent the number of methods, attributes and design flaws respectfully) it can be concluded that the class ModelManager is a God Class indeed.
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.5\textwidth]{Images/GodClassMM}
 \caption{Graphical representation of the package cheopsj.model with inFusion}
-\label{fig:spec2}
+\label{fig:godClassMM}
 \end{figure}
 
 InFusion has brought up some facts about the god class and suggested some actions that could be taken. The first fact was that ModelManager uses a lot of attributes from external classes which was very obvious from the first look at the code, because those attributes are necessary for correct functioning of the numerous methods used for managing of the processes in the model. The second fact was that this class is excessively large and complex and the reason for that are the methods, which have high cyclomatic complexity (a lot of branching in the code) and high nesting level. The biggest and most complex method is printGraphForGroove(), which has a heavy code branching and deep nesting. Also this method has very weak encapsulation because it calls a lot of external accessors.
 
+% God class ClassRecorder
 The second most complex and also God Class is ClassRecorder, which is located in the changerecorders package and its job is to record every change done to the famixClass element. This class has very weak cohesion with the system because its methods are rarely called and on the other hand it calls a large number of external methods. ClassRecorder is also non-cohesive because its methods does not use its attributes very often, for example the method findParentName is using none of the attributes of the class.
 
 The usage of inFusion has helped us a lot for better understanding of the complexity of the system and detection of some of the design flaws. What really makes the job easier is the graphical representation of some of the most important features of an object-oriented code in our case Java, like encapsulation, cohesion, size, complexity, hierarchies. The small drawback of this method is that there are so many statistics and they are increasing with every other tool, that the developer can sometimes get carried away in a direction away from the essential problems of the design. Also the tools like inCode or inFusion only represent the information collected from the source code, but none of them offers some kind of a solution to some of the design flaws encountered.
+
+\section{Detailed Model Capture}
+\subsection{Refactor to Understand}
 
 \section{Reengineering}
 text
