@@ -24,6 +24,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.evolizer.changedistiller.model.entities.SourceCodeEntity;
 
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
+import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Change;
@@ -38,6 +39,7 @@ public class ClassRecorder extends AbstractEntityRecorder {
 	private FamixClass famixClass;
 	private FamixEntity parent;
 	private ModelManager manager;
+	private ModelManagerChange managerChange;
 	private String uniqueName;
 	private int flags;
 	private String name = "";
@@ -45,6 +47,7 @@ public class ClassRecorder extends AbstractEntityRecorder {
 	private ClassRecorder(){
 		//get manager instance
 		manager = ModelManager.getInstance();
+		managerChange = ModelManagerChange.getInstance();
 	}
 
 	public ClassRecorder(IType element) {
@@ -236,7 +239,7 @@ public class ClassRecorder extends AbstractEntityRecorder {
 		famixClass.addChange(change);
 
 		setStructuralDependencies(change, famixClass, parent, this);
-		manager.getModelManagerChange().addChange(change);
+		managerChange.addChange(change);
 	}
 
 	/*
@@ -281,7 +284,7 @@ public class ClassRecorder extends AbstractEntityRecorder {
 
 					change.addStructuralDependency(removal);
 
-					manager.getModelManagerChange().addChange(removal);
+					managerChange.addChange(removal);
 				} else if (latestChange instanceof Remove) {
 					change.addStructuralDependency(latestChange);
 				}

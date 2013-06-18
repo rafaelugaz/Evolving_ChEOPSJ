@@ -25,6 +25,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.evolizer.changedistiller.model.entities.SourceCodeEntity;
 
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
+import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Change;
@@ -39,6 +40,7 @@ public class MethodRecorder extends AbstractEntityRecorder {
 	private FamixMethod famixMethod;
 	private FamixClass parent; // TODO is there something like a nested method inside another method?
 	private ModelManager manager;
+	private ModelManagerChange managerChange;
 	private String uniquename = ""; //TODO need to add parameters to unique naming
 	//TODO need to link method to return type
 	private int flags = 0;
@@ -46,6 +48,7 @@ public class MethodRecorder extends AbstractEntityRecorder {
 	
 	private MethodRecorder(){
 		manager = ModelManager.getInstance();
+		managerChange = ModelManagerChange.getInstance();
 	}
 
 	public MethodRecorder(IMethod method) {
@@ -184,7 +187,7 @@ public class MethodRecorder extends AbstractEntityRecorder {
 		famixMethod.addChange(change);
 
 		setStructuralDependencies(change, famixMethod, parent, this);
-		manager.getModelManagerChange().addChange(change);
+		managerChange.addChange(change);
 	}
 
 	protected void removeAllContainedWithin(AtomicChange change, AtomicChange additionChange) {
@@ -202,7 +205,7 @@ public class MethodRecorder extends AbstractEntityRecorder {
 
 					change.addStructuralDependency(removal);
 
-					manager.getModelManagerChange().addChange(removal);
+					managerChange.addChange(removal);
 				} else if (latestChange instanceof Remove) {
 					change.addStructuralDependency(latestChange);
 				}

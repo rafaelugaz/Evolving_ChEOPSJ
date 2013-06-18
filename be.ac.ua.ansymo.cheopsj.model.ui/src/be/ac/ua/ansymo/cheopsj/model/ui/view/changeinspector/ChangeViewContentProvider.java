@@ -16,8 +16,10 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Display;
 
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
+import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
 import be.ac.ua.ansymo.cheopsj.model.ModelManagerEvent;
 import be.ac.ua.ansymo.cheopsj.model.ModelManagerListener;
+import be.ac.ua.ansymo.cheopsj.model.ModelManagerListeners;
 
 
 
@@ -26,25 +28,34 @@ public class ChangeViewContentProvider implements IStructuredContentProvider,
 	private TableViewer viewer;
 	private ChangeView view;
 	private ModelManager manager;
+	private ModelManagerChange managerChange;
+	private ModelManagerListeners managerListeners;
 
+	private ChangeViewContentProvider() {
+		managerListeners = ModelManagerListeners.getInstance();
+		managerChange = ModelManagerChange.getInstance();
+	}
+	
 	public ChangeViewContentProvider(ChangeView changeView) {
+		this();
+		
 		view = changeView;
 	}
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		this.viewer = (TableViewer) viewer;
 		if (manager != null)
-			manager.getModelManagerListeners().removeModelManagerListener(this);
+			managerListeners.removeModelManagerListener(this);
 		manager = (ModelManager) newInput;
 		if (manager != null)
-			manager.getModelManagerListeners().addModelManagerListener(this);
+			managerListeners.addModelManagerListener(this);
 	}
 
 	public void dispose() {
 	}
 
 	public Object[] getElements(Object parent) {
-		return manager.getModelManagerChange().getChanges().toArray();
+		return managerChange.getChanges().toArray();
 	}
 
 	@Override
@@ -77,7 +88,7 @@ public class ChangeViewContentProvider implements IStructuredContentProvider,
 	}
 
 	public String getSummary() {
-		return manager.getModelManagerChange().getSummary();
+		return managerChange.getSummary();
 	}
 
 }

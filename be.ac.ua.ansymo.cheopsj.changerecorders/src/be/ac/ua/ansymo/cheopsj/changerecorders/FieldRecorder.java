@@ -31,6 +31,7 @@ import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.evolizer.changedistiller.model.entities.SourceCodeEntity;
 
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
+import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Change;
@@ -45,12 +46,14 @@ public class FieldRecorder extends AbstractEntityRecorder {
 	private FamixClass declaredClass;
 	
 	private ModelManager manager;
+	private ModelManagerChange managerChange;
 	private String uniquename = "";
 	private int flags;
 	private String name = "";
 
 	private FieldRecorder(){
 		manager = ModelManager.getInstance();
+		managerChange = ModelManagerChange.getInstance();
 	}
 	
 	public FieldRecorder(IField field) {
@@ -237,7 +240,7 @@ public class FieldRecorder extends AbstractEntityRecorder {
 		famixField.addChange(change);
 
 		setStructuralDependencies(change, famixField);
-		manager.getModelManagerChange().addChange(change);
+		managerChange.addChange(change);
 	}
 
 	protected void setStructuralDependencies(AtomicChange change, Subject subject) {

@@ -225,7 +225,7 @@ public class ModelManager implements Serializable{
 			getModelManagerChange().setChanges(changes);
 			
 			famixEntities = (List<FamixObject>) in.readObject();
-	
+			
 			famixPackagesMap = (Map<String, FamixPackage>) in.readObject();
 			famixClassesMap = (Map<String, FamixClass>) in.readObject();
 			famixMethodsMap = (Map<String, FamixMethod>) in.readObject();

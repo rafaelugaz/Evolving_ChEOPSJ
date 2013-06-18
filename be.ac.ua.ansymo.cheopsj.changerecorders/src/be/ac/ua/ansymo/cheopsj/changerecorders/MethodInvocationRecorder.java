@@ -19,6 +19,7 @@ import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.evolizer.changedistiller.model.entities.SourceCodeEntity;
 
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
+import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Change;
@@ -36,6 +37,7 @@ import be.ac.ua.ansymo.cheopsj.model.famix.FamixObject;
  */
 public class MethodInvocationRecorder extends StatementRecorder {
 	private ModelManager manager;
+	private ModelManagerChange managerChange;
 	private FamixInvocation famixInvocation;
 	private FamixMethod invokedby;
 	private FamixMethod calledmethod;
@@ -48,6 +50,7 @@ public class MethodInvocationRecorder extends StatementRecorder {
 
 	private MethodInvocationRecorder(){
 		manager = ModelManager.getInstance();
+		managerChange = ModelManagerChange.getInstance();
 	}
 
 	/**
@@ -212,7 +215,7 @@ public class MethodInvocationRecorder extends StatementRecorder {
 		famixInvocation.addChange(change);
 
 		setStructuralDependencies(change, famixInvocation);
-		manager.getModelManagerChange().addChange(change);
+		managerChange.addChange(change);
 	}
 
 	/**

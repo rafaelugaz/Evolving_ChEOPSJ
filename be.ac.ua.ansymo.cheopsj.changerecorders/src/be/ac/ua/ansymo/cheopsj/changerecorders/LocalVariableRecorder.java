@@ -29,6 +29,7 @@ import org.evolizer.changedistiller.model.classifiers.java.JavaEntityType;
 import org.evolizer.changedistiller.model.entities.SourceCodeEntity;
 
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
+import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Change;
@@ -48,6 +49,7 @@ public class LocalVariableRecorder extends StatementRecorder {
 	//private String typeuniquename = "";
 	
     private ModelManager manager;
+    private ModelManagerChange managerChange;
     private FamixMethod containingMethod;
     private FamixLocalVariable variable;
     private FamixClass declaredClass;
@@ -55,6 +57,7 @@ public class LocalVariableRecorder extends StatementRecorder {
 	
     private LocalVariableRecorder(){
     	manager = ModelManager.getInstance();
+    	managerChange = ModelManagerChange.getInstance();
     }
     
 	//TODO variables can hide one another if they have the same name, need to somehow encode the nesting depth or scope in the unique name!
@@ -153,7 +156,7 @@ public class LocalVariableRecorder extends StatementRecorder {
 		variable.addChange(change);
 
 		setStructuralDependencies(change, variable);
-		manager.getModelManagerChange().addChange(change);
+		managerChange.addChange(change);
 	}
 
 	private void setStructuralDependencies(AtomicChange change, Subject subject) {

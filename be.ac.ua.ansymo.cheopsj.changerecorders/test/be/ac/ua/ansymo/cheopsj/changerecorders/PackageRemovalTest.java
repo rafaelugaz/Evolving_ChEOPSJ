@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
+import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Remove;
@@ -23,10 +24,12 @@ public class PackageRemovalTest {
 	private String p5 = p4 + ".pack";
 	private PackageRecorder recorder1;
 	private ModelManager manager;
+	private ModelManagerChange managerChange;
 
 	@Before
 	public void setUp() throws Exception {
 		manager = ModelManager.getInstance();
+		managerChange = ModelManagerChange.getInstance();
 		PackageRecorder rec = new PackageRecorder(p5);
 		rec.storeChange(new Add());
 	}
@@ -41,7 +44,7 @@ public class PackageRemovalTest {
 		//When removing a package, the removal is structurally depends on the package's addition
 		recorder1 = new PackageRecorder(p5);
 		recorder1.storeChange(new Remove());
-		assertEquals(6, manager.getModelManagerChange().getChanges().size());
+		assertEquals(6, managerChange.getChanges().size());
 
 		FamixPackage pack = manager.getFamixPackage(p5);
 		assertEquals(2,pack.getAffectingChanges().size());
@@ -56,7 +59,7 @@ public class PackageRemovalTest {
 	public void test2(){
 		recorder1 = new PackageRecorder(p1);
 		recorder1.storeChange(new Remove());
-		assertEquals(10, manager.getModelManagerChange().getChanges().size());
+		assertEquals(10, managerChange.getChanges().size());
 
 		//When removing the topmost package, all subpackages need also be removed
 		removalDependsOnChildRemoval(p1,p2);
@@ -93,7 +96,7 @@ public class PackageRemovalTest {
 		Remove rem = new Remove();
 		recorder1.storeChange(rem);
 		
-		assertEquals(7, manager.getModelManagerChange().getChanges().size());
+		assertEquals(7, managerChange.getChanges().size());
 		assertTrue(rem.getStructuralDependencies().contains(childrem));
 	}
 

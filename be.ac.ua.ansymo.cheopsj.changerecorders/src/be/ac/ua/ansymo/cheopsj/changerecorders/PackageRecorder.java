@@ -16,6 +16,7 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
+import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Change;
@@ -34,11 +35,13 @@ public class PackageRecorder extends AbstractEntityRecorder {
 	private FamixPackage famixPackage; //the package to which we link a change
 	private FamixPackage parent; //the super package
 	private ModelManager manager; //the model manager
+	private ModelManagerChange managerChange;
 	private String uniqueName; //the unique name of our package
 	private String name = "";
 
 	private PackageRecorder(){
 		manager = ModelManager.getInstance();
+		managerChange = ModelManagerChange.getInstance();
 	}
 
 	/**
@@ -136,7 +139,7 @@ public class PackageRecorder extends AbstractEntityRecorder {
 		famixPackage.addChange(change);
 
 		setStructuralDependencies(change, famixPackage);
-		manager.getModelManagerChange().addChange(change);
+		managerChange.addChange(change);
 	}
 
 	protected void setStructuralDependencies(AtomicChange change, Subject subject) {
@@ -200,7 +203,7 @@ public class PackageRecorder extends AbstractEntityRecorder {
 
 					classrem.addStructuralDependency(child.getLatestAddition());
 
-					manager.getModelManagerChange().addChange(classrem);
+					managerChange.addChange(classrem);
 					
 					//TODO remove all within the class?
 				}
@@ -221,7 +224,7 @@ public class PackageRecorder extends AbstractEntityRecorder {
 
 				subpackrem.addStructuralDependency(subpack.getLatestAddition());
 
-				manager.getModelManagerChange().addChange(subpackrem);
+				managerChange.addChange(subpackrem);
 				linkToChildRemoves(subpack);
 			}
 		}		
@@ -238,7 +241,7 @@ public class PackageRecorder extends AbstractEntityRecorder {
 
 			packadd.addStructuralDependency(superpackadd);
 
-			manager.getModelManagerChange().addChange(superpackadd);
+			managerChange.addChange(superpackadd);
 			linkToParentAdditions(superPack);
 		}
 	}

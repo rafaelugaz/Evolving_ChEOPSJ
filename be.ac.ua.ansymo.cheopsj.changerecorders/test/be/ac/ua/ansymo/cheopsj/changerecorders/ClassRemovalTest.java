@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
+import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Remove;
@@ -22,6 +23,7 @@ public class ClassRemovalTest {
 
 	private ClassRecorder recorder1;
 	private ModelManager manager;
+	private ModelManagerChange managerChange;
 	private String packname = "be.ac.ua.test.pack";
 	private String classname = "Boo";
 	//private String nestedclassname = "Foo";
@@ -31,6 +33,7 @@ public class ClassRemovalTest {
 	@Before
 	public void setUp() throws Exception {
 		manager = ModelManager.getInstance();
+		managerChange = ModelManagerChange.getInstance();
 		recorder1 = createRecorderFromDeclaration();
 		addition = new Add();
 		recorder1.storeChange(addition);
@@ -67,7 +70,7 @@ public class ClassRemovalTest {
 		Remove rem = new Remove();
 		recorder1.storeChange(rem);
 		
-		assertEquals(7,manager.getModelManagerChange().getChanges().size());
+		assertEquals(7,managerChange.getChanges().size());
 		
 		assertEquals(1,rem.getStructuralDependencies().size());
 		assertTrue(rem.getStructuralDependencies().contains(addition));

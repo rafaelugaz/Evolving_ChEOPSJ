@@ -16,6 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
+import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Remove;
@@ -28,6 +29,7 @@ public class FieldRemovalTest {
 	private FieldRecorder recorder2;
 	private FieldRecorder recorder3;
 	private ModelManager manager;
+	private ModelManagerChange managerChange;
 	private ClassRecorder crec;
 	
 	private String packname = "be.ac.ua.test.pack";
@@ -48,6 +50,7 @@ public class FieldRemovalTest {
 	@Before
 	public void setUp(){
 		manager = ModelManager.getInstance();
+		managerChange = ModelManagerChange.getInstance();
 		
 		AST ast2 = AST.newAST(AST.JLS3);
 		CompilationUnit cu2 = ast2.newCompilationUnit();
@@ -151,7 +154,7 @@ public class FieldRemovalTest {
 		Remove crem = new Remove();
 		crec.storeChange(crem);
 		
-		assertEquals(15,manager.getModelManagerChange().getChanges().size());
+		assertEquals(15,managerChange.getChanges().size());
 		assertTrue(crem.getStructuralDependencies().contains(classadd));
 		assertEquals(4,crem.getStructuralDependencies().size());
 		
@@ -204,7 +207,7 @@ public class FieldRemovalTest {
 		assertTrue(((AtomicChange)changes[0]).getChangeSubject() instanceof FamixClass);
 		assertEquals(packname+"."+classname,((FamixClass)((AtomicChange)changes[0]).getChangeSubject()).getUniqueName());
 		
-		assertEquals(15,manager.getModelManagerChange().getChanges().size());
+		assertEquals(15,managerChange.getChanges().size());
 	}
 	
 	

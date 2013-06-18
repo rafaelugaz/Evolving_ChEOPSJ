@@ -29,6 +29,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
+import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Change;
@@ -41,6 +42,7 @@ public class ClassAdditionTest {
 
 	private ClassRecorder recorder1;
 	private ModelManager manager;
+	private ModelManagerChange managerChange;
 	private String packname = "be.ac.ua.test.pack";
 	private String classname = "TestClass";
 	private String nestedclassname = "Foo";
@@ -50,6 +52,7 @@ public class ClassAdditionTest {
 	public void setUp() throws Exception {
 		manager = ModelManager.getInstance();
 		recorder1 = createRecorderFromDeclaration();
+		managerChange = ModelManagerChange.getInstance();
 	}
 
 	private ClassRecorder createRecorderFromDeclaration() {
@@ -230,7 +233,7 @@ public class ClassAdditionTest {
 		AtomicChange add = new Add();
 		recorder1.createAndLinkFamixElement();
 		recorder1.createAndLinkChange(add);
-		assertEquals(manager.getModelManagerChange().getChanges().size(), 6); //5 for the packages + 1 for the class
+		assertEquals(managerChange.getChanges().size(), 6); //5 for the packages + 1 for the class
 		AtomicChange packadd = ((FamixClass)add.getChangeSubject()).getBelongsToPackage().getLatestAddition();
 		assertEquals(1,add.getStructuralDependencies().size());
 		assertTrue(add.getStructuralDependencies().contains(packadd));
@@ -266,7 +269,7 @@ public class ClassAdditionTest {
 		recorder.storeChange(add);
 
 		//TEST a nested class inside a normal class
-		assertEquals(7, manager.getModelManagerChange().getChanges().size());
+		assertEquals(7, managerChange.getChanges().size());
 		assertTrue(add.getStructuralDependencies().contains(parentAdd));
 
 		FamixClass containingClass = (FamixClass)parentAdd.getChangeSubject();
@@ -284,7 +287,7 @@ public class ClassAdditionTest {
 		AtomicChange add2 = new Add();
 		recorder2.storeChange(add2);
 
-		assertEquals(8, manager.getModelManagerChange().getChanges().size());
+		assertEquals(8, managerChange.getChanges().size());
 		assertTrue(add2.getStructuralDependencies().contains(add));
 
 		FamixClass clazz2 = (FamixClass)add2.getChangeSubject();

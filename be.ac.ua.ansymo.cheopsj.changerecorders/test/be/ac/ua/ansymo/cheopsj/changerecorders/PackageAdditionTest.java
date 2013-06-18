@@ -27,6 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
+import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Remove;
@@ -40,10 +41,12 @@ public class PackageAdditionTest {
 	private String p5 = p4 + ".pack";
 	private PackageRecorder recorder1;
 	private ModelManager manager;
+	private ModelManagerChange managerChange;
 
 	@Before
 	public void setUp() throws Exception {
 		manager = ModelManager.getInstance();
+		managerChange = ModelManagerChange.getInstance();
 		createRecorderFromDeclaration();
 	}
 
@@ -153,7 +156,7 @@ public class PackageAdditionTest {
 		recorder1.createAndLinkFamixElement();
 		recorder1.createAndLinkChange(new Add());
 
-		assertEquals(5, manager.getModelManagerChange().getChanges().size());
+		assertEquals(5, managerChange.getChanges().size());
 
 		packageHasAddition(p5);
 		packageHasAddition(p4);
@@ -184,7 +187,7 @@ public class PackageAdditionTest {
 
 		FamixPackage pack = manager.getFamixPackage(p1);
 		AtomicChange addition = pack.getLatestAddition();
-		assertEquals(5, manager.getModelManagerChange().getChanges().size());
+		assertEquals(5, managerChange.getChanges().size());
 		assertTrue(addition.getStructuralDependencies().isEmpty());
 	}
 
@@ -203,11 +206,11 @@ public class PackageAdditionTest {
 		PackageRecorder prec = new PackageRecorder(p4);
 		prec.storeChange(new Add());
 
-		int oldsize = manager.getModelManagerChange().getChanges().size();
+		int oldsize = managerChange.getChanges().size();
 		assertFalse(manager.famixPackageExists(p5));
 		recorder1.storeChange(new Add());
 		assertTrue(manager.famixPackageExists(p5));
-		assertEquals(oldsize + 1, manager.getModelManagerChange().getChanges().size());
+		assertEquals(oldsize + 1, managerChange.getChanges().size());
 
 		additionDependsOnParentAddition(p5,p4);
 	}
@@ -224,7 +227,7 @@ public class PackageAdditionTest {
 		prec.storeChange(rem);
 		prec.storeChange(add2);
 
-		assertEquals(7, manager.getModelManagerChange().getChanges().size());
+		assertEquals(7, managerChange.getChanges().size());
 
 		FamixPackage pack = manager.getFamixPackage(p5);
 		AtomicChange addp = pack.getLatestAddition();

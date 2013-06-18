@@ -2,11 +2,6 @@ package be.ac.ua.ansymo.cheopsj.model;
 
 import static org.junit.Assert.*;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,12 +47,12 @@ public class TestModel {
 	@Test
 	public void testAddChange() {
 		int size;
-		size = model.getModelManagerChange().getChanges().size();
+		size = modelChange.getChanges().size();
 		
-		model.getModelManagerChange().addChange(change);
+		modelChange.addChange(change);
 		
-		assertTrue(!model.getModelManagerChange().getChanges().isEmpty());
-		assertTrue(model.getModelManagerChange().getChanges().size() == (size + 1));
+		assertTrue(!modelChange.getChanges().isEmpty());
+		assertTrue(modelChange.getChanges().size() == (size + 1));
 	}
 	
 	@Test
@@ -118,24 +113,24 @@ public class TestModel {
 	
 	@Test
 	public void testGetSummary() {
-		model.getModelManagerChange().addChange(new Change());
-		model.getModelManagerChange().addChange(new Add());
-		model.getModelManagerChange().addChange(new Add());
-		model.getModelManagerChange().addChange(new Remove());
-		model.getModelManagerChange().addChange(new Remove());
-		model.getModelManagerChange().addChange(new Remove());
-		model.getModelManagerChange().addChange(new AtomicChange());
-		model.getModelManagerChange().addChange(new CompositeChange());
-		model.getModelManagerChange().addChange(new CompositeChange());
+		modelChange.addChange(new Change());
+		modelChange.addChange(new Add());
+		modelChange.addChange(new Add());
+		modelChange.addChange(new Remove());
+		modelChange.addChange(new Remove());
+		modelChange.addChange(new Remove());
+		modelChange.addChange(new AtomicChange());
+		modelChange.addChange(new CompositeChange());
+		modelChange.addChange(new CompositeChange());
 		
-		int changeCountLoc = model.getModelManagerChange().getChanges().size();
+		int changeCountLoc = modelChange.getChanges().size();
 		String result;
 		int changeCount, addCount, removeCount;
 		int addCountLoc = 0, removeCountLoc = 0;
 		
 		assertTrue(changeCountLoc >= 0);
 		
-		for(IChange change: model.getModelManagerChange().getChanges()){
+		for(IChange change: modelChange.getChanges()){
 			if(change instanceof Add){
 				addCountLoc++;
 			}else if(change instanceof Remove){
@@ -143,7 +138,7 @@ public class TestModel {
 			}
 		}
 		
-		result = model.getModelManagerChange().getSummary();
+		result = modelChange.getSummary();
 		
 		String[] res_parts = result.split(" ");
 		changeCount = Integer.parseInt(res_parts[0]);
