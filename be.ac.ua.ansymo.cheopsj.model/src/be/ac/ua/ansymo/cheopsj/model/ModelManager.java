@@ -61,7 +61,8 @@ public class ModelManager implements Serializable{
 	private List<IChange> changes;
 	//This list contains all ModelManagerListeners, i.e. listeners that need to be notified when a new change was added to the model.
 	//For instance the views in the ...model.ui plugin
-	private List<ModelManagerListener> listeners;
+	//private List<ModelManagerListener> listeners;
+	private ModelManagerListeners modManListeners;
 
 	//We also keep maps to specific FamixEntities to allow easier lookup.
 	private Map<String, FamixPackage> famixPackagesMap;
@@ -76,12 +77,13 @@ public class ModelManager implements Serializable{
 
 	//The modelmanager is a Singleton entity, hence the constructor is private.
 	//You should always call the static method getInstance() to get the ModelManager instance.
-	private static ModelManager INSTANCE = new ModelManager();
+	private static ModelManager INSTANCE = null;
 
 	private ModelManager() {
 		changes = new ArrayList<IChange>();
 		famixEntities = new ArrayList<FamixObject>();
-		listeners = new ArrayList<ModelManagerListener>();
+		//listeners = new ArrayList<ModelManagerListener>();
+		modManListeners = new ModelManagerListeners();
 
 		famixPackagesMap = new HashMap<String, FamixPackage>();
 		famixClassesMap = new HashMap<String, FamixClass>();
@@ -126,20 +128,12 @@ public class ModelManager implements Serializable{
 
 	//One change added to ModelManager, this method is used to interate the ModelMangerListeners and notify them.
 	private void fireChangeAdded(IChange newChange) {
-		ModelManagerEvent event = new ModelManagerEvent(this, new IChange[] {newChange});
-		for (ModelManagerListener i : listeners) {
-			i.changesAdded(event);
-		}
-		// printAllChanges();
+		modManListeners.fireChangeAdded(newChange);
 	}
 
 	//Several changes added to ModelManager, this method is used to interate the ModelMangerListeners and notify them.
 	private void fireChangesAdded(IChange[] newChanges) {
-		ModelManagerEvent event = new ModelManagerEvent(this, newChanges);
-		for (ModelManagerListener i : listeners) {
-			i.changesAdded(event);
-		}
-		// printAllChanges();
+		modManListeners.fireChangesAdded(newChanges);
 	}
 
 
@@ -216,8 +210,7 @@ public class ModelManager implements Serializable{
 	 * @param listener
 	 */
 	public void addModelManagerListener(ModelManagerListener listener) {
-		if (!listeners.contains(listener))
-			listeners.add(listener);
+		modManListeners.addModelManagerListener(listener);
 	}
 
 	/**
@@ -225,7 +218,7 @@ public class ModelManager implements Serializable{
 	 * @param listener
 	 */
 	public void removeModelManagerListener(ModelManagerListener listener) {
-		listeners.remove(listener);
+		modManListeners.removeModelManagerListener(listener);
 	}
 
 
@@ -355,7 +348,7 @@ public class ModelManager implements Serializable{
 	}
 	
 	public List<ModelManagerListener> getListeners() {
-		return listeners;
+		return modManListeners.getListeners();
 	}
 	
 	// /////////////////////////////////////////////////////////////////////////

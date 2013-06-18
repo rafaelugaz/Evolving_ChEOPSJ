@@ -29,12 +29,14 @@ public class TestModel {
 
 	private Change change;
 	private ModelManager model;
+	private ModelManagerChange modelChange;
 	private FamixObject fe1, fe2, fe3, fe4, fe5, fe6;
 	
 	@Before
 	public void setUp() throws Exception {
 		change = new Change();
 		model = ModelManager.getInstance();
+		modelChange = ModelManagerChange.getInstance();
 		fe1 = new FamixClass();
 		fe2 = new FamixMethod();
 		fe3 = new FamixPackage();
