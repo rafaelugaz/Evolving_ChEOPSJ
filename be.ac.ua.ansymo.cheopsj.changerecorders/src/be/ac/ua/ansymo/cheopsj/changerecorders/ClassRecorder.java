@@ -236,7 +236,7 @@ public class ClassRecorder extends AbstractEntityRecorder {
 		famixClass.addChange(change);
 
 		setStructuralDependencies(change, famixClass, parent, this);
-		manager.addChange(change);
+		manager.getModelManagerChange().addChange(change);
 	}
 
 	/*
@@ -281,7 +281,7 @@ public class ClassRecorder extends AbstractEntityRecorder {
 
 					change.addStructuralDependency(removal);
 
-					manager.addChange(removal);
+					manager.getModelManagerChange().addChange(removal);
 				} else if (latestChange instanceof Remove) {
 					change.addStructuralDependency(latestChange);
 				}

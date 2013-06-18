@@ -212,7 +212,7 @@ public class MethodInvocationRecorder extends StatementRecorder {
 		famixInvocation.addChange(change);
 
 		setStructuralDependencies(change, famixInvocation);
-		manager.addChange(change);
+		manager.getModelManagerChange().addChange(change);
 	}
 
 	/**

@@ -153,7 +153,7 @@ public class PackageAdditionTest {
 		recorder1.createAndLinkFamixElement();
 		recorder1.createAndLinkChange(new Add());
 
-		assertEquals(5, manager.getChanges().size());
+		assertEquals(5, manager.getModelManagerChange().getChanges().size());
 
 		packageHasAddition(p5);
 		packageHasAddition(p4);
@@ -184,7 +184,7 @@ public class PackageAdditionTest {
 
 		FamixPackage pack = manager.getFamixPackage(p1);
 		AtomicChange addition = pack.getLatestAddition();
-		assertEquals(5, manager.getChanges().size());
+		assertEquals(5, manager.getModelManagerChange().getChanges().size());
 		assertTrue(addition.getStructuralDependencies().isEmpty());
 	}
 
@@ -203,11 +203,11 @@ public class PackageAdditionTest {
 		PackageRecorder prec = new PackageRecorder(p4);
 		prec.storeChange(new Add());
 
-		int oldsize = manager.getChanges().size();
+		int oldsize = manager.getModelManagerChange().getChanges().size();
 		assertFalse(manager.famixPackageExists(p5));
 		recorder1.storeChange(new Add());
 		assertTrue(manager.famixPackageExists(p5));
-		assertEquals(oldsize + 1, manager.getChanges().size());
+		assertEquals(oldsize + 1, manager.getModelManagerChange().getChanges().size());
 
 		additionDependsOnParentAddition(p5,p4);
 	}
@@ -224,7 +224,7 @@ public class PackageAdditionTest {
 		prec.storeChange(rem);
 		prec.storeChange(add2);
 
-		assertEquals(7, manager.getChanges().size());
+		assertEquals(7, manager.getModelManagerChange().getChanges().size());
 
 		FamixPackage pack = manager.getFamixPackage(p5);
 		AtomicChange addp = pack.getLatestAddition();

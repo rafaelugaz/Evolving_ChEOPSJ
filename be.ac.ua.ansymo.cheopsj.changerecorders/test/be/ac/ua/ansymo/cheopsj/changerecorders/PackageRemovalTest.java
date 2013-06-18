@@ -41,7 +41,7 @@ public class PackageRemovalTest {
 		//When removing a package, the removal is structurally depends on the package's addition
 		recorder1 = new PackageRecorder(p5);
 		recorder1.storeChange(new Remove());
-		assertEquals(6, manager.getChanges().size());
+		assertEquals(6, manager.getModelManagerChange().getChanges().size());
 
 		FamixPackage pack = manager.getFamixPackage(p5);
 		assertEquals(2,pack.getAffectingChanges().size());
@@ -56,7 +56,7 @@ public class PackageRemovalTest {
 	public void test2(){
 		recorder1 = new PackageRecorder(p1);
 		recorder1.storeChange(new Remove());
-		assertEquals(10, manager.getChanges().size());
+		assertEquals(10, manager.getModelManagerChange().getChanges().size());
 
 		//When removing the topmost package, all subpackages need also be removed
 		removalDependsOnChildRemoval(p1,p2);
@@ -93,7 +93,7 @@ public class PackageRemovalTest {
 		Remove rem = new Remove();
 		recorder1.storeChange(rem);
 		
-		assertEquals(7, manager.getChanges().size());
+		assertEquals(7, manager.getModelManagerChange().getChanges().size());
 		assertTrue(rem.getStructuralDependencies().contains(childrem));
 	}
 

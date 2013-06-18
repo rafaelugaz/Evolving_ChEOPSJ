@@ -237,7 +237,7 @@ public class FieldRecorder extends AbstractEntityRecorder {
 		famixField.addChange(change);
 
 		setStructuralDependencies(change, famixField);
-		manager.addChange(change);
+		manager.getModelManagerChange().addChange(change);
 	}
 
 	protected void setStructuralDependencies(AtomicChange change, Subject subject) {

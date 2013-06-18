@@ -67,7 +67,7 @@ public class ClassRemovalTest {
 		Remove rem = new Remove();
 		recorder1.storeChange(rem);
 		
-		assertEquals(7,manager.getChanges().size());
+		assertEquals(7,manager.getModelManagerChange().getChanges().size());
 		
 		assertEquals(1,rem.getStructuralDependencies().size());
 		assertTrue(rem.getStructuralDependencies().contains(addition));

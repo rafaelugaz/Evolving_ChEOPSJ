@@ -230,7 +230,7 @@ public class ClassAdditionTest {
 		AtomicChange add = new Add();
 		recorder1.createAndLinkFamixElement();
 		recorder1.createAndLinkChange(add);
-		assertEquals(manager.getChanges().size(), 6); //5 for the packages + 1 for the class
+		assertEquals(manager.getModelManagerChange().getChanges().size(), 6); //5 for the packages + 1 for the class
 		AtomicChange packadd = ((FamixClass)add.getChangeSubject()).getBelongsToPackage().getLatestAddition();
 		assertEquals(1,add.getStructuralDependencies().size());
 		assertTrue(add.getStructuralDependencies().contains(packadd));
@@ -266,7 +266,7 @@ public class ClassAdditionTest {
 		recorder.storeChange(add);
 
 		//TEST a nested class inside a normal class
-		assertEquals(7, manager.getChanges().size());
+		assertEquals(7, manager.getModelManagerChange().getChanges().size());
 		assertTrue(add.getStructuralDependencies().contains(parentAdd));
 
 		FamixClass containingClass = (FamixClass)parentAdd.getChangeSubject();
@@ -284,7 +284,7 @@ public class ClassAdditionTest {
 		AtomicChange add2 = new Add();
 		recorder2.storeChange(add2);
 
-		assertEquals(8, manager.getChanges().size());
+		assertEquals(8, manager.getModelManagerChange().getChanges().size());
 		assertTrue(add2.getStructuralDependencies().contains(add));
 
 		FamixClass clazz2 = (FamixClass)add2.getChangeSubject();

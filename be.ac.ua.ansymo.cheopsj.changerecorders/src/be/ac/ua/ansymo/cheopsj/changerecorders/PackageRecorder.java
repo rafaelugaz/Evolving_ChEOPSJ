@@ -136,7 +136,7 @@ public class PackageRecorder extends AbstractEntityRecorder {
 		famixPackage.addChange(change);
 
 		setStructuralDependencies(change, famixPackage);
-		manager.addChange(change);
+		manager.getModelManagerChange().addChange(change);
 	}
 
 	protected void setStructuralDependencies(AtomicChange change, Subject subject) {
@@ -200,7 +200,7 @@ public class PackageRecorder extends AbstractEntityRecorder {
 
 					classrem.addStructuralDependency(child.getLatestAddition());
 
-					manager.addChange(classrem);
+					manager.getModelManagerChange().addChange(classrem);
 					
 					//TODO remove all within the class?
 				}
@@ -221,7 +221,7 @@ public class PackageRecorder extends AbstractEntityRecorder {
 
 				subpackrem.addStructuralDependency(subpack.getLatestAddition());
 
-				manager.addChange(subpackrem);
+				manager.getModelManagerChange().addChange(subpackrem);
 				linkToChildRemoves(subpack);
 			}
 		}		
@@ -238,7 +238,7 @@ public class PackageRecorder extends AbstractEntityRecorder {
 
 			packadd.addStructuralDependency(superpackadd);
 
-			manager.addChange(superpackadd);
+			manager.getModelManagerChange().addChange(superpackadd);
 			linkToParentAdditions(superPack);
 		}
 	}

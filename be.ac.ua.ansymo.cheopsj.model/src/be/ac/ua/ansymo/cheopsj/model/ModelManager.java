@@ -98,32 +98,6 @@ public class ModelManager implements Serializable{
 	}
 
 	/**
-	 * @return the list of changes maintained in the ModelManager
-	 */
-	public List<IChange> getChanges() {
-		return getModManChange().getChanges();
-	}
-
-	/**
-	 * Add a change to the ModelManager and alert the listeners of a new change.
-	 * @param change
-	 */
-	public void addChange(Change change) {
-		getModManChange().addChange(change);
-	}
-
-
-	/**
-	 * This method is used to count the number of changes in the model as well as how many of those changes are additions and removals.
-	 * Used in the ChangeInspector View
-	 * @return a string containing the counted changes
-	 */
-	public String getSummary() {
-		return getModManChange().getSummary();
-	}
-
-
-	/**
 	 * Method to add a famix entity to the ModelManager. It will add the entity to the large list of famixentitites, but also add it to its resepective map.
 	 */
 	public void addFamixElement(FamixObject fe) {
@@ -202,7 +176,7 @@ public class ModelManager implements Serializable{
 		try {
 			fos = new FileOutputStream(file);
 			out = new ObjectOutputStream(fos);
-			out.writeObject(getModManChange().getChanges());
+			out.writeObject(getModelManagerChange().getChanges());
 			out.writeObject(famixEntities);
 
 			out.writeObject(famixPackagesMap);
@@ -237,18 +211,18 @@ public class ModelManager implements Serializable{
 			} catch (IOException ex) {
 				// CheopsjLog.logError(ex);
 			}
-			getModManListeners().fireChangesAdded(
-					getModManChange().getChanges().toArray(
-							new IChange[getModManChange().getChanges().size()]));
+			getModelManagerListeners().fireChangesAdded(
+					getModelManagerChange().getChanges().toArray(
+							new IChange[getModelManagerChange().getChanges().size()]));
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
 	private void loadFamixEntities(ObjectInputStream in) {
 		try {
-			List<IChange> changes = getModManChange().getChanges();
+			List<IChange> changes = getModelManagerChange().getChanges();
 			changes = (List<IChange>) in.readObject();
-			getModManChange().setChanges(changes);
+			getModelManagerChange().setChanges(changes);
 			
 			famixEntities = (List<FamixObject>) in.readObject();
 	
@@ -298,11 +272,11 @@ public class ModelManager implements Serializable{
 		return famixInvocationsMap;
 	}
 	
-	public ModelManagerListeners getModManListeners() {
+	public ModelManagerListeners getModelManagerListeners() {
 		return ModelManagerListeners.getInstance();
 	}
 	
-	public ModelManagerChange getModManChange() {
+	public ModelManagerChange getModelManagerChange() {
 		return ModelManagerChange.getInstance();
 	}
 	
@@ -430,7 +404,7 @@ public class ModelManager implements Serializable{
 			BufferedWriter out = new BufferedWriter(fstream);
 			printStartOfGrooveGraph(out);
 
-			for(IChange change : getModManChange().getChanges()){
+			for(IChange change : getModelManagerChange().getChanges()){
 				printEdgesInGrooveChange(out, change);
 			}
 
@@ -438,7 +412,7 @@ public class ModelManager implements Serializable{
 				printEdgesInGrooveFamix(famix, out);
 			}
 
-			for(IChange change : getModManChange().getChanges()){
+			for(IChange change : getModelManagerChange().getChanges()){
 				for(Change dep : ((AtomicChange)change).getStructuralDependencies()){
 					printEdgeInGrooveGraph(out, change.getID(), dep.getID(), "depends");
 				}

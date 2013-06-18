@@ -184,7 +184,7 @@ public class MethodRecorder extends AbstractEntityRecorder {
 		famixMethod.addChange(change);
 
 		setStructuralDependencies(change, famixMethod, parent, this);
-		manager.addChange(change);
+		manager.getModelManagerChange().addChange(change);
 	}
 
 	protected void removeAllContainedWithin(AtomicChange change, AtomicChange additionChange) {
@@ -202,7 +202,7 @@ public class MethodRecorder extends AbstractEntityRecorder {
 
 					change.addStructuralDependency(removal);
 
-					manager.addChange(removal);
+					manager.getModelManagerChange().addChange(removal);
 				} else if (latestChange instanceof Remove) {
 					change.addStructuralDependency(latestChange);
 				}

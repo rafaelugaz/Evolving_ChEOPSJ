@@ -34,17 +34,17 @@ public class ChangeViewContentProvider implements IStructuredContentProvider,
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		this.viewer = (TableViewer) viewer;
 		if (manager != null)
-			manager.getModManListeners().removeModelManagerListener(this);
+			manager.getModelManagerListeners().removeModelManagerListener(this);
 		manager = (ModelManager) newInput;
 		if (manager != null)
-			manager.getModManListeners().addModelManagerListener(this);
+			manager.getModelManagerListeners().addModelManagerListener(this);
 	}
 
 	public void dispose() {
 	}
 
 	public Object[] getElements(Object parent) {
-		return manager.getChanges().toArray();
+		return manager.getModelManagerChange().getChanges().toArray();
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class ChangeViewContentProvider implements IStructuredContentProvider,
 	}
 
 	public String getSummary() {
-		return manager.getSummary();
+		return manager.getModelManagerChange().getSummary();
 	}
 
 }

@@ -52,12 +52,12 @@ public class TestModel {
 	@Test
 	public void testAddChange() {
 		int size;
-		size = model.getChanges().size();
+		size = model.getModelManagerChange().getChanges().size();
 		
-		model.addChange(change);
+		model.getModelManagerChange().addChange(change);
 		
-		assertTrue(!model.getChanges().isEmpty());
-		assertTrue(model.getChanges().size() == (size + 1));
+		assertTrue(!model.getModelManagerChange().getChanges().isEmpty());
+		assertTrue(model.getModelManagerChange().getChanges().size() == (size + 1));
 	}
 	
 	@Test
@@ -118,24 +118,24 @@ public class TestModel {
 	
 	@Test
 	public void testGetSummary() {
-		model.addChange(new Change());
-		model.addChange(new Add());
-		model.addChange(new Add());
-		model.addChange(new Remove());
-		model.addChange(new Remove());
-		model.addChange(new Remove());
-		model.addChange(new AtomicChange());
-		model.addChange(new CompositeChange());
-		model.addChange(new CompositeChange());
+		model.getModelManagerChange().addChange(new Change());
+		model.getModelManagerChange().addChange(new Add());
+		model.getModelManagerChange().addChange(new Add());
+		model.getModelManagerChange().addChange(new Remove());
+		model.getModelManagerChange().addChange(new Remove());
+		model.getModelManagerChange().addChange(new Remove());
+		model.getModelManagerChange().addChange(new AtomicChange());
+		model.getModelManagerChange().addChange(new CompositeChange());
+		model.getModelManagerChange().addChange(new CompositeChange());
 		
-		int changeCountLoc = model.getChanges().size();
+		int changeCountLoc = model.getModelManagerChange().getChanges().size();
 		String result;
 		int changeCount, addCount, removeCount;
 		int addCountLoc = 0, removeCountLoc = 0;
 		
 		assertTrue(changeCountLoc >= 0);
 		
-		for(IChange change: model.getChanges()){
+		for(IChange change: model.getModelManagerChange().getChanges()){
 			if(change instanceof Add){
 				addCountLoc++;
 			}else if(change instanceof Remove){
@@ -143,7 +143,7 @@ public class TestModel {
 			}
 		}
 		
-		result = model.getSummary();
+		result = model.getModelManagerChange().getSummary();
 		
 		String[] res_parts = result.split(" ");
 		changeCount = Integer.parseInt(res_parts[0]);

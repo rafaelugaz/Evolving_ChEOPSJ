@@ -48,12 +48,12 @@ public class ZestChangeViewContentProvider implements IGraphEntityContentProvide
 
 		this.viewer = (GraphViewer) viewer;
 		if (manager != null)
-			manager.getModManListeners().removeModelManagerListener(this);
+			manager.getModelManagerListeners().removeModelManagerListener(this);
 
 		manager = (ModelManager) newInput;
 
 		if (manager != null)
-			manager.getModManListeners().addModelManagerListener(this);
+			manager.getModelManagerListeners().addModelManagerListener(this);
 
 	}
 
@@ -61,7 +61,7 @@ public class ZestChangeViewContentProvider implements IGraphEntityContentProvide
 	public Object[] getElements(Object input) {
 
 		Collection<Object> result = new ArrayList<Object>();
-		result.addAll(manager.getChanges());
+		result.addAll(manager.getModelManagerChange().getChanges());
 		result.addAll(manager.getFamixElements());
 		
 		for(FamixObject elem : manager.getFamixElements()){

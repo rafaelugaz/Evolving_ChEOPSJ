@@ -153,7 +153,7 @@ public class LocalVariableRecorder extends StatementRecorder {
 		variable.addChange(change);
 
 		setStructuralDependencies(change, variable);
-		manager.addChange(change);
+		manager.getModelManagerChange().addChange(change);
 	}
 
 	private void setStructuralDependencies(AtomicChange change, Subject subject) {

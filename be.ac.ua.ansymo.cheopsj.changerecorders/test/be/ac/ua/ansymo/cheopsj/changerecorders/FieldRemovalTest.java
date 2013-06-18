@@ -151,7 +151,7 @@ public class FieldRemovalTest {
 		Remove crem = new Remove();
 		crec.storeChange(crem);
 		
-		assertEquals(15,manager.getChanges().size());
+		assertEquals(15,manager.getModelManagerChange().getChanges().size());
 		assertTrue(crem.getStructuralDependencies().contains(classadd));
 		assertEquals(4,crem.getStructuralDependencies().size());
 		
@@ -204,7 +204,7 @@ public class FieldRemovalTest {
 		assertTrue(((AtomicChange)changes[0]).getChangeSubject() instanceof FamixClass);
 		assertEquals(packname+"."+classname,((FamixClass)((AtomicChange)changes[0]).getChangeSubject()).getUniqueName());
 		
-		assertEquals(15,manager.getChanges().size());
+		assertEquals(15,manager.getModelManagerChange().getChanges().size());
 	}
 	
 	
