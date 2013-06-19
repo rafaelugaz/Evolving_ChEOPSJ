@@ -12,22 +12,22 @@ package be.ac.ua.ansymo.cheopsj.model.famix;
 
 public class FamixProperty {
 
-/*
- * 
- */
-private FamixObject belongsToObject = null;
-
-/*
- * 
- */
-private String name = "";
-
-/*
- * 
- */
-private String value = "";
+	/*
+	 * 
+	 */
+	private FamixObject belongsToObject = null;
 	
-	 
+	/*
+	 * 
+	 */
+	private String name = "";
+	
+	/*
+	 * 
+	 */
+	private String value = "";
+		
+		 
 	/**
 	 * Getter of the property <tt>belongsToObject</tt>
 	 *

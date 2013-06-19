@@ -242,32 +242,6 @@ public class ClassRecorder extends AbstractEntityRecorder {
 		managerChange.addChange(change);
 	}
 
-	/*
-	protected void setStructuralDependencies(AtomicChange change, Subject subject) {
-		if (change instanceof Add) {
-			if (parent != null) {
-				Change parentChange = parent.getLatestAddition();
-				if (parentChange != null) {
-					change.addStructuralDependency(parentChange);
-				}//The parent of the class, be it a class or a package should already exist.
-			}
-			Remove removalChange = subject.getLatestRemoval();
-			if (removalChange != null) {
-				change.addStructuralDependency(removalChange);
-			}
-		} else if (change instanceof Remove) {
-			// set dependency to addition of this entity
-			AtomicChange additionChange = subject.getLatestAddition();
-			if (additionChange != null) {
-				change.addStructuralDependency(additionChange);
-				
-				//Dependencies to removes of child entities:
-				removeAllContainedWithin(change, additionChange);
-			}
-		}
-	}
-	*/
-
 	protected void removeAllContainedWithin(AtomicChange change, AtomicChange additionChange) {
 		Collection<Change> dependees = additionChange.getStructuralDependees();
 		for (Change dependee : dependees) {

@@ -256,10 +256,52 @@ The usage of inFusion has helped us a lot for better understanding of the comple
 
 \section{Detailed Model Capture}
 \subsection{Refactor to Understand}
+This chapter presents some of the refactoring we have done to the plugin, which also helped us to better understand the system. Three types of refactorings we have used and they will be explained in the following paragraphs.
+
+\subsubsection{Remove Duplicate Code}
+For locating the duplicated code we have used the tool CCFinderX which was used on the duplicated code laboratory session. One of the biggest and most important duplicate code we have refactored is the method \emph{setStructuralDependencies} that was located in two classes: ClassRecorder and MethodRecorder in the package \emph{be.ac.ua.ansymo.cheopsj.changerecorders}. This method was used by both of the mentioned classes in order to manage the structural dependencies between the changes, depending on if the change was of type addition or removal of classes or methods.
+After the duplicated code was located and we have seen that both of the classes Method and Class Recorder are part of a hierarchy where the abstract class AbstractEntityRecorder is their parent, we figured out that we can use the refactoring method \textbf{Pull Up Method}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{Images/PullUpMethod}
+\caption{Graphical representation of the Pull Up Method refactoring}
+\label{fig:PullUp}
+\end{figure}
+
+The result of the refactoring is graphically represented on Figure \ref{fig:PullUp}, the method was pulled up to the common parent of the both classes and that is the AbstractEntityRecorder class. Because the setStructuralDependencies method was private it could be only used by the classes where it was declared, now after transferring it one level up in the hierarchy and making the method protected it can be used only by the methods which extend the class where it is located.
+
+\subsubsection{Replace Condition Branches by Methods}
+This refactoring method suggests that, if we locate branches in methods that have a large number of lines of code and a lot of responsibilities, they can be used to create new private methods. As an example of this kind of refactoring we are going to present how we have divided a branch of code from the method \textbf{setStructuralDependencies} which was duplicated and was refactored. This kind of refactoring is easy and the most important elements are: to locate how many and what kind of attributes the new method should receive and what it does need to return. In our case a big \emph{if} branch is replaced with private method named setStructDepAdd, which is setting the structural dependencies if the change that was made was of type \emph{Add}.
+
+\subsubsection{Refactor Method Bodies to a Consistent Level of Abstraction}
+Because long methods are a bad design solution and they can cause problems and lower the efficiency of the system, they should be refactored by removing big blocks of code and transferring them to a new private methods. This refactoring is very similar to the previous one, with the main difference instead of creating a new method from a branch, we can create new method if we find a block of code which logically represents a feature of the method. An example is the method \textbf{loadModel} in the class ModelManager, which is used for loading the model from already stored file. The block of code that loads the famix entities has been extracted from loadModel to a new private method called \textbf{loadFamixEntities} and the new method as input receives the ObjectInputStream from the file where the entities are stored.
 
 \section{Reengineering}
-text
 
+\subsection{Redistribute Responsibilities}
+
+\subsubsection{Split Up God Class}
+This refactoring method is used to split the god class into a number of smaller classes which will redistribute the responsibilities from the god class. Solving this problem was difficult because the methods from the god class in our system (\textbf{ModelManager}) were receiving a big number of external calls from classes located all over the system.
+
+From ModelManager we have extracted four classes as it can be seen on Figure \ref{fig:GodClassSplit} and in the following paragraphs we are going to explain the process of refactoring. The two most obvious fields that we could split from the ModelManager are \emph{changes} and \emph{listeners}, which are used for storing all the changes and listeners present in the system.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{Images/GodClassSplit}
+\caption{Graphical representation of the Split God Class refactoring, before and after applying}
+\label{fig:GodClassSplit}
+\end{figure}
+
+We have created two new classes \textbf{ModelManagerChange} and \textbf{ModelManagerListeners} that are containing the above mentioned fields and we have transferred all the methods that are managing those fields to the new classes. After we finished with the transfer of the actual code of the relevant methods, still all the external calls were coming to the ModelManager, which was then redirecting them to the new classes. To solve that problem we have located all the incoming calls to the transferred methods and we have redirected them to the new classes. Because the ModelManager is a Singleton class, which means that only one instance can exist in the whole system, we have also made the new classes Singletons.
+
+Furthermore, we have noticed a big method called \emph{printGraphForGroove} followed with a numerous private methods used by it. This method had a lot of external outgoing calls to other methods and that is why we figured out that is a good idea to create a completely new class called \textbf{PrintGraphForGroove}. In this class we have transfered also all the private methods that were used by the printGraphForGroove method.
+
+Lastly the class ModelManager is not deleted, but now it is not a god class. This class is now in charge of managing the entities like famix classes, methods, variables and also for loading and saving the method. All the external incoming calls are not coming to ModelManager as before the refactoring, but all of them are redirected to the class that contains the method they want to call.
+
+After splitting the god class we have run InFusion to analyze the project and we have received some satisfying results. First of all the overall quality deficit index (QDI) was lowered from 11.9 to 7.1, which means that the refactorings we have made are correct and are providing results. As second the class ModelManager was not more recognized as a god class, but as a regular class. It is worth mentioning that the tests we have written about the ModelManager are now testing some methods from the new classes and they are not showing any failures.
+
+\newpage
 \section{References}
 \begin{thebibliography}{9}
 
