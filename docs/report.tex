@@ -214,17 +214,8 @@ From the pyramid overview the following information can be intepreted:
   \item Methods are rather long (12 lines of code per method in average), but on the other hand their logic is simple because there are not many conditional branches in the methods. This is calculated by dividing the total lines of code (LOC) by the cyclomatic complexity (CYCLO). Methods also have high coupling intensity which means that they call many methods, the number of methods (NOM) divided by the operation calls (CALL) is high.
 \end{itemize}
 
-\newpage % remove
 \subsubsection{Class Size Overview}
 To get an impression of the size and complexity of the classes constituting \emph{ChEOPSJ}, we used the Package Map view of the inFusion tool. This view presents all the classes grouped in their respective packages. Each class is represented by a rectangle where the width is the amount of attributes and the height the amount of methods it contains. This Package Map can be seen in Figure \ref{fig:sizeOverview}. Three potential exceptional entities are labeled in it which we will discuss further in this section.
-
-The FamixPackage class is taller than the other classes in it's package, which means that it contains more methods. Upon closer examination in the source code we saw that these extra methods for managing the entities contained in it. This makes sense because the package is the highest level entity in a workspace and can contain all the others entities (e.g. classes, variables).
-
-The Change class also stands out from the other classes in that it is tall and wide compared to the rest. After examining the source code we saw that all the methods are actually getters and setters and that this class does not contain much actual behavior. It is used more for storing properties of a change, like its time stamp, its intent and its dependencies -- therefore its larger width.
-
-The ModelManager class is perhaps the most exceptional class, in its size showed in the Package Map as well as in its source code. The model manager keeps track of all the famix entities in HashMap datastructures, so it contains many attributes as well as getter and setter methods for those attributes. 
-
-This class is also labeled as a God Class by the inFusion tool.
 
 \begin{figure}[h]
 \centering
@@ -233,9 +224,19 @@ This class is also labeled as a God Class by the inFusion tool.
 \label{fig:sizeOverview}
 \end{figure}
 
+The FamixPackage class is taller than the other classes in it's package, which means that it contains more methods. Upon closer examination in the source code we saw that these extra methods for managing the entities contained in it. This makes sense because the package is the highest level entity in a workspace and can contain all the others entities (e.g. classes, variables).
+
+The Change class also stands out from the other classes in that it is tall and wide compared to the rest. After examining the source code we saw that all the methods are actually getters and setters and that this class does not contain much actual behavior. It is used more for storing properties of a change, like its time stamp, its intent and its dependencies -- therefore its larger width.
+
+The ModelManager class is perhaps the most exceptional class, in its size showed in the Package Map as well as in its source code. The model manager keeps track of all the famix entities in HashMap datastructures as well of the changes that these suffer, so it contains many attributes as well as getter and setter methods for those attributes. 
+
+This class is also labeled as a God Class by the inFusion tool. It is reported by the tool that it uses many attributes from external classes, is excessively large and complex and is very non-cohesive. After examining the code and with the help of the tool, we saw that the three issues are mainly caused by a single method called printGraphForGroove. At first sight, it would appear that this method is only related to the graphical interface but further examination could be required to see if actual splitting of the god class is required.
+
 \subsubsection{Class Inheritance}
 \label{sec:classInheritance}
+TODO
 
+\subsubsection{God classes}
 % God class ModelManager
 Furthermore, as we suspected inFusion discovered the class ModelManager from the package cheopsj.model as a God class. This class is one of the largest and most complex classes in the whole system. Its job is to store and maintain every famix element created and also take care of all the changes created by the change recorders, that is the reason why this class is very complex and its coupling with the rest of the system is very high. On Figure \ref{fig:godClassMM} the graphical representation of the whole model package can be seen, where the ModelManager class is located in the left-bottom corner, colored with strong red color. Judging by the hight, width and color of the class (which represent the number of methods, attributes and design flaws respectfully) it can be concluded that the class ModelManager is a God Class indeed.
 
