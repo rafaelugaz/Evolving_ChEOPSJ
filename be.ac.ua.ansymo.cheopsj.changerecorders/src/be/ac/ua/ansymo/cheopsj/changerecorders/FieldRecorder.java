@@ -168,12 +168,25 @@ public class FieldRecorder extends AbstractEntityRecorder {
 			
 			//TODO first need to go up all classlevels to see if there is a typemember in the class with this name
 			
-			searchClassname(field, declaredClassName);
+			//THEN Search for fully qualified classname in import statments
+			CompilationUnit cu = (CompilationUnit)field.getRoot();
+			List<ImportDeclaration> imports = cu.imports();
+			for(ImportDeclaration imp : imports){
+				Name impname = imp.getName();
+				if(impname.getFullyQualifiedName().endsWith(declaredClassName)){
+					declaredClassName = impname.getFullyQualifiedName();
+					break;
+				}
+			}
+			
+			//if still not found there, need to assume that the class is in same package as this class.
+			if(!declaredClassName.contains(".")){
+				declaredClassName = cu.getPackage().getName().getFullyQualifiedName() + "." + declaredClassName;
+			}
 			
 		}
 		return manager.getFamixClass(declaredClassName);
 	}
-	
 
 	private FamixClass findParentFamixEntity(FieldDeclaration field) {
 		//find parent famix entity

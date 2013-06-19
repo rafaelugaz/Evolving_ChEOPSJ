@@ -75,4 +75,11 @@ public class ModelManagerListeners {
 		}
 		// printAllChanges();
 	}
+	
+	/*
+	 * For testing purposes only!
+	 */
+	public void clearModel() {
+		INSTANCE = new ModelManagerListeners();
+	}
 }

@@ -138,7 +138,8 @@ public class ClassAdditionTest {
 			IProject project  = root.getProject("TestProject");
 			IJavaProject javaProject = JavaCore.create(project);
 
-			IPackageFragment mypackage = javaProject.findPackageFragment(new Path("/TestProject/src/be/ac/ua/test/pack"));
+			IPackageFragment mypackage = javaProject.findPackageFragment(
+					new Path("/TestProject/src/be/ac/ua/test/pack"));
 			if (mypackage.getKind() == IPackageFragmentRoot.K_SOURCE) {
 				ICompilationUnit cu = mypackage.getCompilationUnits()[1]; 
 				IType[] types = cu.getAllTypes();

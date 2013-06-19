@@ -153,6 +153,7 @@ public class ModelManager implements Serializable{
 		 * ArrayList<ModelManagerListener>();
 		 */
 		INSTANCE = new ModelManager();
+		getModelManagerChange().clearModel();
 	}
 
 	/*

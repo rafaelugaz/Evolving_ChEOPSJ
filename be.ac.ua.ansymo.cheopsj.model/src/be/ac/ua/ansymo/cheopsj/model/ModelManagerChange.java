@@ -54,10 +54,10 @@ public class ModelManagerChange {
 		//add change to list
 		changes.add(change);
 		//alert listeners that a change was added
-		getModManListeners().fireChangeAdded(change);
+		getModelManagerListeners().fireChangeAdded(change);
 	}
 	
-	public ModelManagerListeners getModManListeners() {
+	public ModelManagerListeners getModelManagerListeners() {
 		return ModelManagerListeners.getInstance();
 	}
 	
@@ -78,5 +78,12 @@ public class ModelManagerChange {
 			}
 		}
 		return changeCount + " changes; " + addCount + " additions and " + removeCount + " removals";
+	}
+	
+	/*
+	 * For testing purposes only!
+	 */
+	public void clearModel() {
+		INSTANCE = new ModelManagerChange();
 	}
 }

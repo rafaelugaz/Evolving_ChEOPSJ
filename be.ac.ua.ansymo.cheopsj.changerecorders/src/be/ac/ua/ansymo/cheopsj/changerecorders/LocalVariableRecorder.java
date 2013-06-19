@@ -15,7 +15,6 @@ import java.util.List;
 
 import org.eclipse.jdt.core.ILocalVariable;
 import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.SimpleType;
@@ -96,7 +95,21 @@ public class LocalVariableRecorder extends StatementRecorder {
 			
 			//TODO first need to go up all classlevels to see if there is a typemember in the class with this name
 			
-			searchClassname(type, declaredClassName);
+			//THEN Search for fully qualified classname in import statments
+			CompilationUnit cu = (CompilationUnit)type.getRoot();
+			List<ImportDeclaration> imports = cu.imports();
+			for(ImportDeclaration imp : imports){
+				Name impname = imp.getName();
+				if(impname.getFullyQualifiedName().endsWith(declaredClassName)){
+					declaredClassName = impname.getFullyQualifiedName();
+					break;
+				}
+			}
+			
+			//if still not found there, need to assume that the class is in same package as this class.
+			if(!declaredClassName.contains(".")){
+				declaredClassName = cu.getPackage().getName().getFullyQualifiedName() + "." + declaredClassName;
+			}
 		}
 		
 		if(!manager.famixClassExists(declaredClassName)){
@@ -109,6 +122,7 @@ public class LocalVariableRecorder extends StatementRecorder {
 		
 		return manager.getFamixClass(declaredClassName);	
 	}
+	
 	
 
 	public LocalVariableRecorder(ILocalVariable element) {

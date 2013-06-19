@@ -89,8 +89,8 @@ public class ClassRecorder extends AbstractEntityRecorder {
 		//set the flags
 		flags = declaration.getFlags();
 		
-		String superclassname = declaration.getSuperclass().getFullyQualifiedName();
-		System.out.println(superclassname);
+//		String superclassname = declaration.getSuperclass().getFullyQualifiedName();
+//		System.out.println(superclassname);
 		
 	}
 
