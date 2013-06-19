@@ -5,6 +5,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
+import be.ac.ua.ansymo.cheopsj.model.PrintGraphForGroove;
 
 
 public class ExportGrooveGraphHandler extends AbstractHandler {
@@ -14,7 +15,7 @@ public class ExportGrooveGraphHandler extends AbstractHandler {
 		 */
 		public Object execute(ExecutionEvent event) throws ExecutionException {
 
-			ModelManager.getInstance().printGraphForGroove();
+			PrintGraphForGroove.getInstance().printGraphForGroove();
 			// should now also refresh the change view?
 			new RefreshHandler().execute(event);
 			return null;
