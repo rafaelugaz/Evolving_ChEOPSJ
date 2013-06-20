@@ -279,6 +279,13 @@ Because long methods are a bad design solution and they can cause problems and l
 
 \section{Reengineering}
 
+\subsection{Tests}
+Every reengineering change to the system brings the issue, is the system still working correctly and while trying to improve the system have we broke some other feature without knowing. The risk of damaging the system is always present, but in order to lower the probability of faults we need to write tests. Tests will provide assurance that after reeingineering the part under test it will preserve its behavior.
+
+Before using the pattern \textbf{Split Up God Class} on ModelManager, we wanted to be sure that most of the methods will work correctly after their transfer to the new classes. Because most of the methods in ModelManager are getters and setters for the fields that are included in the class, only a few methods needed to be tested. For secure refactoring and evolution of the class ModelManager which is a god class, we have used the \textbf{Write Tests to Enable Evolution} reengineering pattern. The tests we have written are located in the package \emph{test.be.ac.ua.ansymo.cheopsj.model} in the class TestModel. One of the tests included in the class is testing the process of adding a famix element. After a famix element is created it must be stored in the correct field depending on the type of the famix (method, field, package, etc.) and what this test does is, it checks if the famix is added to the field it corresponds with its type.
+
+We did not wrote all the tests at once and check them at the end, instead we have used the pattern \textbf{Grow Your Test Base Incrementally}, so we can be sure that the tests are written properly and they pass without reporting errors. By using this testing pattern we have gained more time because we were writing tests only for the parts that needed to be tested and in the same time are not extremely difficult to test and time consuming.
+
 \subsection{Redistribute Responsibilities}
 
 \subsubsection{Split Up God Class}
