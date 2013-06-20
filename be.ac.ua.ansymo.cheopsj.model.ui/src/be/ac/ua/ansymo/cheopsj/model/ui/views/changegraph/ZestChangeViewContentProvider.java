@@ -24,13 +24,13 @@ import be.ac.ua.ansymo.cheopsj.model.ModelManagerListener;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Change;
 import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
+import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixAttribute;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixBehaviouralEntity;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixInvocation;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixLocalVariable;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixMethod;
-import be.ac.ua.ansymo.cheopsj.model.famix.FamixObject;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixPackage;
 
 
@@ -64,7 +64,7 @@ public class ZestChangeViewContentProvider implements IGraphEntityContentProvide
 		result.addAll(manager.getModelManagerChange().getChanges());
 		result.addAll(manager.getFamixElements());
 		
-		for(FamixObject elem : manager.getFamixElements()){
+		for(Subject elem : manager.getFamixElements()){
 			if(elem instanceof FamixBehaviouralEntity){
 				result.addAll(((FamixBehaviouralEntity) elem).getLocalVariables());
 			}

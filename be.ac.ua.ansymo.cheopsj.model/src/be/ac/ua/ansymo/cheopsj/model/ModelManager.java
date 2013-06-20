@@ -30,6 +30,7 @@ import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Change;
 import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Remove;
+import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixAttribute;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixBehaviouralEntity;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
@@ -37,7 +38,6 @@ import be.ac.ua.ansymo.cheopsj.model.famix.FamixEntity;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixInvocation;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixLocalVariable;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixMethod;
-import be.ac.ua.ansymo.cheopsj.model.famix.FamixObject;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixPackage;
 
 /**
@@ -54,7 +54,7 @@ public class ModelManager implements Serializable{
 	private static final long serialVersionUID = 4107886630686152745L;
 
 	//This list contains all FamixEntities
-	private List<FamixObject> famixEntities;
+	private List<Subject> famixEntities;
 
 	//We also keep maps to specific FamixEntities to allow easier lookup.
 	private Map<String, FamixPackage> famixPackagesMap;
@@ -72,7 +72,7 @@ public class ModelManager implements Serializable{
 	private static ModelManager INSTANCE = null;
 
 	private ModelManager() {
-		famixEntities = new ArrayList<FamixObject>();
+		famixEntities = new ArrayList<Subject>();
 
 		famixPackagesMap = new HashMap<String, FamixPackage>();
 		famixClassesMap = new HashMap<String, FamixClass>();
@@ -100,7 +100,7 @@ public class ModelManager implements Serializable{
 	/**
 	 * Method to add a famix entity to the ModelManager. It will add the entity to the large list of famixentitites, but also add it to its resepective map.
 	 */
-	public void addFamixElement(FamixObject fe) {
+	public void addFamixElement(Subject fe) {
 		famixEntities.add(fe);
 		if (fe instanceof FamixPackage) {
 			famixPackagesMap.put(((FamixPackage) fe).getUniqueName(), (FamixPackage) fe);
@@ -122,14 +122,14 @@ public class ModelManager implements Serializable{
 	 * @param fe
 	 * @return
 	 */
-	public boolean famixElementExists(FamixObject fe) {
+	public boolean famixElementExists(Subject fe) {
 		return famixEntities.contains(fe);
 	}
 
 	/**
 	 * @return the list of famixentities
 	 */
-	public Collection<FamixObject> getFamixElements() {
+	public Collection<Subject> getFamixElements() {
 		return famixEntities;
 	}
 
@@ -225,7 +225,7 @@ public class ModelManager implements Serializable{
 			changes = (List<IChange>) in.readObject();
 			getModelManagerChange().setChanges(changes);
 			
-			famixEntities = (List<FamixObject>) in.readObject();
+			famixEntities = (List<Subject>) in.readObject();
 			
 			famixPackagesMap = (Map<String, FamixPackage>) in.readObject();
 			famixClassesMap = (Map<String, FamixClass>) in.readObject();
@@ -257,7 +257,7 @@ public class ModelManager implements Serializable{
 		return famixMethodsMap;
 	}
 	
-	public List<FamixObject> getFamixEntities() {
+	public List<Subject> getFamixEntities() {
 		return famixEntities;
 	}
 	
@@ -291,7 +291,7 @@ public class ModelManager implements Serializable{
 	 * @param identifier
 	 */
 	public FamixMethod getFamixMethodWithName(String identifier) {
-		for (FamixObject fo : famixEntities) {
+		for (Subject fo : famixEntities) {
 			if (fo instanceof FamixMethod) {
 				if (((FamixMethod) fo).getUniqueName().equals(identifier)) {
 					return (FamixMethod) fo;

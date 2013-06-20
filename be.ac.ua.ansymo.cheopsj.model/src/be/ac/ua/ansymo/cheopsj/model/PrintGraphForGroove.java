@@ -9,6 +9,7 @@ import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Change;
 import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Remove;
+import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixAttribute;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixBehaviouralEntity;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
@@ -16,7 +17,6 @@ import be.ac.ua.ansymo.cheopsj.model.famix.FamixEntity;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixInvocation;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixLocalVariable;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixMethod;
-import be.ac.ua.ansymo.cheopsj.model.famix.FamixObject;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixPackage;
 
 public class PrintGraphForGroove {
@@ -55,7 +55,7 @@ public class PrintGraphForGroove {
 				printEdgesInGrooveChange(out, change);
 			}
 
-			for(FamixObject famix : model.getFamixElements()){
+			for(Subject famix : model.getFamixElements()){
 				printEdgesInGrooveFamix(famix, out);
 			}
 
@@ -97,7 +97,7 @@ public class PrintGraphForGroove {
 		}
 	}
 	
-	private void printEdgesInGrooveFamix(FamixObject famix, BufferedWriter out) {
+	private void printEdgesInGrooveFamix(Subject famix, BufferedWriter out) {
 		try {
 			printNodeInGrooveGraph(out, famix.getID());
 	

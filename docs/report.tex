@@ -1,6 +1,7 @@
 \documentclass[a4paper]{article}
 \usepackage{verbatim}
 \usepackage{graphicx}
+\usepackage{hyperref}
 
 \title{Software Reengineering Project \\ Evolving \emph{ChEOPSJ}: from a prototype to a tool}
 \author{Alejandro Merlo\\ Viktor Stojkovski\\ Rafael Ugaz}
@@ -38,7 +39,7 @@ The project \emph{be.ac.ua.ansymo.cheopsj.branding} contains an about.html websi
 
 \subsubsection{be.ac.ua.ansymo.cheopsj.changerecorders}
 % changerecorders
-The project \emph{be.ac.ua.ansymo.cheopsj.changerecorders} is the first with actual source code. It contains the datastructures used for storing the changes of each type of entity (e.g. class, method or variable).
+The project \emph{be.ac.ua.ansymo.cheopsj.changerecorders} is the first with actual source code. It contains the data structures used for storing the changes of each type of entity (e.g. class, method or variable).
 The AbstractEntityRecorder is at the top of the hierarchy subclassed by all recorders in the package. The StatementRecorder is also abstract but subclassed only by LocalVariable and MethodInvocation recorders, it adds extra common methods to them. All recorders inherit the storeChange method which uses the the abstract methods createAndLinkFamixElement and createAndLinkChange methods, which are implemented differently by each recorder subclass. These two methods, like their names indicate, create and link the famix element object and the change object to the recorder object.
 
 Some classes related to one of the improvements that we must reengineer (support changes of accesses of fields and local variables) are also found in this project but have been excluded from the build path (probably unfinished) so we should look into them later and could use them as a basis.
@@ -168,13 +169,13 @@ After examining the code for mismatches with the initial hypothesis, we adapted 
 
 \subsubsection{Final refined design}
 \label{sec:finalDesign}
-After one last examination of the code we could answer the question remaining of how the AbstractEntityRecorder where instantiated. We found out that this is done by two classes: the ChangeRecorder class in the Logger package and the ChangeExtractor class in the Distiller package. This can be seen in Figure \ref{fig:spec2b}. This makes sense because these two packages take care of the two functionalities that store changes.
+After one last examination of the code we could answer the question remaining of how the AbstractEntityRecorder where instantiated. We found out that this is done by two classes: the ChangeRecorder class in the Logger package and the ChangeExtractor class in the Distiller package. This can be seen in Figure \ref{fig:spec2}. This makes sense because these two packages take care of the two functionalities that store changes.
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\textwidth]{Images/spec2}
 \caption{Third and final class diagram about recording of changes}
-\label{fig:spec2b}
+\label{fig:spec2}
 \end{figure}
 
 \subsection{Study the Exceptional Entities}
@@ -206,7 +207,7 @@ A red color on a metric means a potential negative quantity, blue not negative o
 \label{fig:pyramid}
 \end{figure}
 
-From the pyramid overview the following information can be intepreted:
+From the pyramid overview the following information can be interpreted:
 \begin{itemize}
 \item Class hierarchies are very tall, as it can be seen in the average height of inheritance trees (HIT) metric which is colored red with a value of 2.25. The class hierarchies are also of average width, which is good, because the average number of direct descendants (NDD) is 0.33. This observation can be seen with more detail with the Class Inheritance visualization in section \ref{sec:classInheritance}.
 
@@ -276,7 +277,7 @@ This chapter presents some of the refactoring we have done to the plugin, which 
 
 \subsubsection{Remove Duplicate Code}
 For locating the duplicated code we have used the tool CCFinderX which was used on the duplicated code laboratory session. One of the biggest and most important duplicate code we have refactored is the method \emph{setStructuralDependencies} that was located in two classes: ClassRecorder and MethodRecorder in the package \emph{be.ac.ua.ansymo.cheopsj.changerecorders}. This method was used by both of the mentioned classes in order to manage the structural dependencies between the changes, depending on if the change was of type addition or removal of classes or methods.
-After the duplicated code was located and we have seen that both of the classes Method and Class Recorder are part of a hierarchy where the abstract class AbstractEntityRecorder is their parent, we figured out that we can use the refactoring method \textbf{Pull Up Method}.
+After the duplicated code was located and we have seen that both of the classes Method and Class Recorder are part of a hierarchy where the abstract class AbstractEntityRecorder is their parent, we figured out that we can use the refactoring method \textbf{Pull Up Method} \cite{sourcemaking}.
 
 \begin{figure}[h]
 \centering
@@ -324,16 +325,24 @@ Lastly the class ModelManager is not deleted, but now it is not a god class. Thi
 
 After splitting the god class we have run InFusion to analyze the project and we have received some satisfying results. First of all the overall quality deficit index (QDI) was lowered from 11.9 to 7.1, which means that the refactorings we have made are correct and are providing results. As second the class ModelManager was not more recognized as a god class, but as a regular class. It is worth mentioning that the tests we have written about the ModelManager are now testing some methods from the new classes and they are not showing any failures.
 
+\subsection{Collapse Hierarchy \cite{sourcemaking}}
+In this paragraph we are going to explain how we have re-factored one flaw in the design of the hierarchies that we mentioned in the \emph{Class Inheritance} section in this report. That flaw is in the hierarchy (Figure \ref{fig:inheritanceMap}), where the class Subject is the root and just below in the hierarchy is the class FamixObject. For solving this problem we have used the refactoring pattern \textbf{Collapse Hierarchy}, where we have merged the two classes in one (Subject) and we have transfered all the incoming calls to the methods in the class Subject. After the refactoring the class FamixEntity inherits directly from the class Subject. All the tests were run after this refactoring and all of them were running correctly and did not report any errors.
+
 \subsection{Move Behavior Close to Data}
-After analyzing and understanding the part of the system that concerns to our re-engineering goal and to make the inclusion of new type of changes to the system easier we decided that the design of the change recorders shown in section \ref{sec:finalDesign} should be modified. In the current design, in order to record changes of a new entity, e.g. local variables or accessors, two classes must be subclassed and their respective methods must be implemented: the Subject and AbstractEntityRecorder abstract classes.
+After analyzing and understanding the part of the system that concerns to our re-engineering goal and to make the inclusion of new type of changes to the system easier we decided that the design of the change recorders shown in section \ref{sec:finalDesign} should be modified. In the current design, in order to record changes of a new entity, e.g. local variables or accessors, two classes must be subclassed and their respective methods must be implemented: the Subject and AbstractEntityRecorder abstract classes. 
+
+We noticed that the classes of the Subject hierarchy were being \emph{mere data containers} and the ones of the AbstractEntityRecorder hierarchy contained all the behavior, namely storing changes. The AbstractEntityRecorder classes were actually acting as the intermediate providers to the real clients ChangeRecorder and ChangeExtractor as it can be seen in Figure \ref{fig:spec2}.
+
+So the proposed solution is to move the behavior (methods) located in each change recorder class into the respective famix entity. For example the method \verb+storeChange()+ of ClassRecorder would be moved into FamixClass. Then the clients of the change recorders would no longer use them as indirect providers but treat directly with the famix entities.
+
+This refactoring is very complicated to do and involves many difficulties. First the tests that we are currently using are located in the \emph{changerecorder} package and test the classes that this refactoring intends to remove. Another difficulty is that the refactoring would be very big and, because of the last problem mentioned, there would be no tests for each increment. New tests would have to be created which adds to the complexity of this task.
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\textwidth]{Images/behaviorToData}
-\caption{The design of system after the moving the behavior closer to data}
+\caption{The design of system after the refactoring}
 \label{fig:behaviorToData}
 \end{figure}
-
 
 \newpage
 \section{References}
@@ -344,6 +353,9 @@ After analyzing and understanding the part of the system that concerns to our re
 	\emph{Object-oriented reengineering patterns}. 
 	Morgan Kaufmann, 
 	2002.
+
+\bibitem{sourcemaking}
+	\href{http://sourcemaking.com/refactoring}{sourcemaking.com/refactoring}
 
 \end{thebibliography}
 \end{document}

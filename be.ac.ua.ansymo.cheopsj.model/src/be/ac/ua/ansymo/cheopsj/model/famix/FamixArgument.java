@@ -10,7 +10,9 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.model.famix;
 
-public abstract class FamixArgument extends FamixObject {
+import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
+
+public abstract class FamixArgument extends Subject {
 	
 	/**
 	 * 
