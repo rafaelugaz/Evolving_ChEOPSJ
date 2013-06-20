@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass[a4paper]{article}
 \usepackage{verbatim}
 \usepackage{graphicx}
 
@@ -10,17 +10,14 @@
 \maketitle
 
 \section{Introduction}
+For this re-engineering project, we have the task of improving the current implementation of the \emph{ChEOPSJ} system to support the storing and managing of changes with a more fine-grained level of detail. This means that the tool should be re-engineered so it can easily include support for local variables, full method signatures, and accesses of fields, local variables or parameters.
 
 \section{First Contact}
-
-text
-
-\subsection{Chat with the mantainers}
-text
+In this section, we describe the initial steps that we took when we first encountered the system. The section is divided (as well as the whole report) in subsections representing a re-engineering pattern from \cite{demeyer02} that has been applied.
 
 \subsection{Read all the code in one hour}
 \label{sec:codeOneHour}
-For this task we saw that the \emph{ChEOPSJ} system is split into ten projects, so we decided to divide them among the three members of our group. Each member read the code of their corresponding projects in around one hour and took notes. Then we explained our findings to the rest of the group and merged the notes together to produce the report shown below. Because of the `time is scarce' principle, we payed more attention to the following items, as it is proposed in \cite{demeyer02}:
+For this task we saw that the \emph{ChEOPSJ} system is split into ten projects, so we decided to divide them among the three members of our group. Each member read the code of their corresponding projects in around one hour and took notes. Then we explained our findings to each other in a meeting and merged the notes together to produce the report shown below. Because of the `time is scarce' principle, we payed more attention to the following items, as it is proposed in \cite{demeyer02}:
 \begin{itemize}
 \item Abstract classes and methods, that reveal design intentions.
 \item Classes high in the hierarchy, which often define domain abstractions; their subclasses introduce variations on a theme.
@@ -42,7 +39,7 @@ The project \emph{be.ac.ua.ansymo.cheopsj.branding} contains an about.html websi
 \subsubsection{be.ac.ua.ansymo.cheopsj.changerecorders}
 % changerecorders
 The project \emph{be.ac.ua.ansymo.cheopsj.changerecorders} is the first with actual source code. It contains the datastructures used for storing the changes of each type of entity (e.g. class, method or variable).
-The AbstractEntityRecorder is at the top of the hierarchy subclassed by all recorders in the package. The \verb+StatementRecorder+ is also abstract but subclassed only by \verb+LocalVariable+ and \verb+MethodInvocation+ recorders, it adds extra common methods to them. All recorders inherit the storeChange method which uses the the abstract methods \verb+createAndLinkFamixElement+ and \verb+createAndLinkChange+ methods, which are implemented differently by each recorder subclass. These two methods, like their names indicate, create and link the famix element object and the change object to the recorder object.
+The AbstractEntityRecorder is at the top of the hierarchy subclassed by all recorders in the package. The StatementRecorder is also abstract but subclassed only by LocalVariable and MethodInvocation recorders, it adds extra common methods to them. All recorders inherit the storeChange method which uses the the abstract methods createAndLinkFamixElement and createAndLinkChange methods, which are implemented differently by each recorder subclass. These two methods, like their names indicate, create and link the famix element object and the change object to the recorder object.
 
 Some classes related to one of the improvements that we must reengineer (support changes of accesses of fields and local variables) are also found in this project but have been excluded from the build path (probably unfinished) so we should look into them later and could use them as a basis.
 
@@ -109,7 +106,7 @@ The project \emph{be.ac.ua.ansymo.cheopsj.update} contains information about the
 
 % evolizer.changedistiller
 \subsubsection{org.evolizer.changedistiller}
-The project \emph{org.evolizer.changedistiller} contains the external library for extracting source code changes from two java files used in the \emph{be.ac.ua.ansymo.cheopsj.distiller} project.
+This project contains the external library for extracting source code changes from two java files used in the \emph{be.ac.ua.ansymo.cheopsj.distiller} project.
 
 \subsubsection{Conclusion}
 In conclusion, the naming conventions of the whole workspace seem appropriate and help understanding the code much faster. The separation of classes into projects and into packages also states the intention of each group of classes more clearly. The comments could be better, but then again because of the facts just mentioned, they are not always needed. Finally, only two projects (changerecorders and logger) contain tests, the logger is an important part of \emph{ChEOPSJ} because it implements on of its main functionalities i.e. logging new changes for a project. In the other hand, the distiller project takes care of the other main functionality of \emph{ChEOPSJ}, which is distilling changes from an existing project, but it does not contain tests. It is possible that we will need to implement tests for this project in the future. The model project seems also very relevant (specially the model manager) and does not have any tests either.
@@ -134,12 +131,10 @@ The first time we tried build the system in eclipse, we encountered some errors 
 With the system running, we added a mock project to the workspace along with some packages and classes to see the functionality of the system. We noticed from the console that some exceptions were thrown while adding new elements in the java editor saying that the elements could not be found. It would appear that the system tries to locate this elements in real-time while the user is not finished defining them in the editor.
 
 \section{Initial Understanding}
+At this point, after the First Contact with the system, we can start to explore it with more detail. This section presents our initial understanding of the system regarding it's design and exceptional entities.
 
 \subsection{Speculate about Design}
-Because our goal is to restructure \emph{ChEOPSJ} to support recording changes of more fine-grained level of detail, we focused on the design of the recording of changes. This process is relevant for two of the main functionalities of \emph{ChEOPSJ}, logging of new changes as well as extracting changes from an existing project.
-
-\subsubsection{First class diagram}
-With our understanding of the system, we recognized three main actors involved in this process: a change, the element that suffers the change and a change recorder that creates these two objects in some way. This can be seen in the first class diagram that we designed, shown in Figure \ref{fig:spec0}.
+Because our goal is to restructure \emph{ChEOPSJ} to support recording changes of more fine-grained level of detail, we focused on the design of the recording of changes process. This process is relevant for two of the main functionalities of \emph{ChEOPSJ}, logging of new changes as well as extracting changes from an existing project.
 
 \begin{figure}[h]
 \centering
@@ -148,8 +143,11 @@ With our understanding of the system, we recognized three main actors involved i
 \label{fig:skim}
 \end{figure}
 
-\subsubsection{Second class diagram}
-After examinating the code for mismatches with the initial hypothesis, we adapted the class diagram in several ways, as can be seen in Figure \ref{fig:spec1}:
+\subsubsection{Initial design speculation}
+With our understanding of the system, we recognized three main actors involved in this process: a change, the element that suffers the change and a change recorder that creates these two objects in some way. This can be seen in the first class diagram that we designed, shown in Figure \ref{fig:spec0}.
+
+\subsubsection{Refined design speculation}
+After examining the code for mismatches with the initial hypothesis, we adapted the class diagram in several ways, as can be seen in Figure \ref{fig:spec1}:
 
 \begin{itemize}
 \item First, we renamed the ChangeRecorder to AbstractEntityRecorder, which is at the top of the hierarchy of all change recorder classes. We also added some of the subclasses of this hierarchy like PackageRecorder, MethodRecorder and ClassRecorder. The way this AbstractEntityRecorder is invoked and by which class is still pending.
@@ -164,17 +162,17 @@ After examinating the code for mismatches with the initial hypothesis, we adapte
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.8\textwidth]{Images/spec1}
-\caption{Second design speculation about recording of changes}
+\caption{Second class diagram about recording of changes}
 \label{fig:spec1}
 \end{figure}
 
-\subsubsection{Third class diagram}
-After one last examination of the code we could answer the question remaining of when and how the AbstractEntityRecorders where instantiated. We found out that this is done by the ChangeRecorder class in the \emph{be.ac.ua.ansymo.cheopsj.logger} package, which in turn is triggered by an event fired by the eclipse framework class org.eclipse.jdt.core.JavaCore. This can be seen in Figure \ref{fig:spec2b}.
+\subsubsection{Final refined design}
+After one last examination of the code we could answer the question remaining of how the AbstractEntityRecorder where instantiated. We found out that this is done by two classes: the ChangeRecorder class in the Logger package and the ChangeExtractor class in the Distiller package. This can be seen in Figure \ref{fig:spec2b}. This makes sense because these two packages take care of the two functionalities that store changes.
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.8\textwidth]{Images/spec2b}
-\caption{Third design speculation about recording of changes}
+\includegraphics[width=0.9\textwidth]{Images/spec2}
+\caption{Third and final class diagram about recording of changes}
 \label{fig:spec2b}
 \end{figure}
 
@@ -209,9 +207,11 @@ A red color on a metric means a potential negative quantity, blue not negative o
 
 From the pyramid overview the following information can be intepreted:
 \begin{itemize}
-  \item Class hierarchies are very tall, as it can be seen in the average height of inheritance trees (HIT) metric which is colored red with a value of 2.25. The class hierarchies are also of average width, which is good, because the average number of direct descendants (NDD) is 0.33. This observation can be seen with more detail with the Class Inheritance visualization in section \ref{sec:classInheritance}.
-  \item Classes have an average number of methods (5.51) and are organized in rather fine-grained packages, in other words there are few classes per package. We noticed the latter while Reading The Code In One Hour in section \ref{sec:codeOneHour} which made the initial understanding of the system easier because of the good division of classes in the packages.
-  \item Methods are rather long (12 lines of code per method in average), but on the other hand their logic is simple because there are not many conditional branches in the methods. This is calculated by dividing the total lines of code (LOC) by the cyclomatic complexity (CYCLO). Methods also have high coupling intensity which means that they call many methods, the number of methods (NOM) divided by the operation calls (CALL) is high.
+\item Class hierarchies are very tall, as it can be seen in the average height of inheritance trees (HIT) metric which is colored red with a value of 2.25. The class hierarchies are also of average width, which is good, because the average number of direct descendants (NDD) is 0.33. This observation can be seen with more detail with the Class Inheritance visualization in section \ref{sec:classInheritance}.
+
+\item Classes have an average number of methods (5.51) and are organized in rather fine-grained packages, in other words there are few classes per package. We noticed the latter while Reading The Code In One Hour in section \ref{sec:codeOneHour} which made the initial understanding of the system easier because of the good division of classes in the packages.
+
+\item Methods are rather long (12 lines of code per method in average), but on the other hand their logic is simple because there are not many conditional branches in the methods. This is calculated by dividing the total lines of code (LOC) by the cyclomatic complexity (CYCLO). Methods also have high coupling intensity which means that they call many methods, the number of methods (NOM) divided by the operation calls (CALL) is high.
 \end{itemize}
 
 \subsubsection{Class Size Overview}
@@ -228,13 +228,28 @@ The FamixPackage class is taller than the other classes in it's package, which m
 
 The Change class also stands out from the other classes in that it is tall and wide compared to the rest. After examining the source code we saw that all the methods are actually getters and setters and that this class does not contain much actual behavior. It is used more for storing properties of a change, like its time stamp, its intent and its dependencies -- therefore its larger width.
 
-The ModelManager class is perhaps the most exceptional class, in its size showed in the Package Map as well as in its source code. The model manager keeps track of all the famix entities in HashMap datastructures as well of the changes that these suffer, so it contains many attributes as well as getter and setter methods for those attributes. 
+The ModelManager class is perhaps the most exceptional class, in its size showed in the Package Map as well as in its source code. The model manager keeps track of all the famix entities in HashMap data structures as well of the changes that these suffer, so it contains many attributes as well as getter and setter methods for those attributes. 
 
 This class is also labeled as a God Class by the inFusion tool. It is reported by the tool that it uses many attributes from external classes, is excessively large and complex and is very non-cohesive. After examining the code and with the help of the tool, we saw that the three issues are mainly caused by a single method called printGraphForGroove. At first sight, it would appear that this method is only related to the graphical interface but further examination could be required to see if actual splitting of the god class is required.
 
 \subsubsection{Class Inheritance}
 \label{sec:classInheritance}
-TODO
+Next, we studied the various subtrees in the inheritance hierarchies. For visualizing them, we used the Inheritance Map from the inFusion tool which can be seen in Figure \ref{fig:inheritanceMap}. We examine three inheritance subtrees that are related to the improvement that we want to re-engineer: 
+
+\begin{itemize}
+\item The first is the one rooted at \emph{Subject}, which contains all the possible entities of a Java workspace that can suffer a change -- like Package, Class or Method. This is the deepest hierarchy with 4 levels of inheritance. The first level of inheritance seems a little suspicious because it only contains one class with no siblings which could mean that the super and subclass are not very different. This could be re-factored by merging the two classes together. This should be first verified via code browsing.
+
+\item Next, there is the \emph{Change} hierarchy, which is quite small and straightforward. This hierarchy does not seem suspicious so we will not re-factor it following the \textbf{If It Ain’t Broke, Don’t Fix It} pattern.
+
+\item The hierarchy of the change recorders with \emph{AbstractEntityRecorder} as the root contains a change recorder class almost for each entity of the Subject hierarchy. If we recall from previous sections, the change recorders are responsible for creating the changes and entities as well as linking them together whenever an event is sent from the eclipse framework itself saying that the user modified the compilation unit. This hierarchy seems a bit broad at the first depth level and could perhaps also use refactoring to make it more efficient and easier to extend. The root class is very small, it is actually smaller than all it's subclasses which could be solved by pushing some common methods and attributes upwards.
+\end{itemize}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{Images/inheritanceMap}
+\caption{Inheritance Map created with inFusion}
+\label{fig:inheritanceMap}
+\end{figure}
 
 \subsubsection{God classes}
 % God class ModelManager
@@ -256,7 +271,7 @@ The usage of inFusion has helped us a lot for better understanding of the comple
 
 \section{Detailed Model Capture}
 \subsection{Refactor to Understand}
-This chapter presents some of the refactoring we have done to the plugin, which also helped us to better understand the system. Three types of refactorings we have used and they will be explained in the following paragraphs.
+This chapter presents some of the refactoring we have done to the plugin, which also helped us to better understand the system. Three types of refactoring techniques we have used and they will be explained in the following paragraphs.
 
 \subsubsection{Remove Duplicate Code}
 For locating the duplicated code we have used the tool CCFinderX which was used on the duplicated code laboratory session. One of the biggest and most important duplicate code we have refactored is the method \emph{setStructuralDependencies} that was located in two classes: ClassRecorder and MethodRecorder in the package \emph{be.ac.ua.ansymo.cheopsj.changerecorders}. This method was used by both of the mentioned classes in order to manage the structural dependencies between the changes, depending on if the change was of type addition or removal of classes or methods.

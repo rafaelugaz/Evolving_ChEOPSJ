@@ -1,0 +1,31 @@
+====================
+Exceptional Entities
+====================
+The AbstractEntityRecorder Hierarchy seems suspicious (very broad 2nd depth level) and is most likely the one we should refactor to make
+the adding of new recorders easier. 
+Some sibling classes of this hierarchy are larger than their super class which could imply that too little is inherited form the super class. Must verify this via coe browsing
+
+The Subject Hierarchy seems more "correct"
+
+No classes seem too exceptional in their sizes, only perhaps ModelManager which is also labeled as a God Class by the Infusion tool.
+ClassRecorder is also a God Class according to Infusion, we should look further into that.
+
+====================
+Tests
+====================
+We should create black box tests (test the interface not the implementation) and use them as regression tests for the two subsystems that we will modify:
+ModelManager and the ChangeRecorder hierarchy
+
+Tests to understand?
+
+Regression Test AFTER EVERY CHANGE
+
+====================
+Migrate Systems Incrementally
+====================
+Choose one part to tackle at a time
+Build tests for that part
+====================
+Prototype the target solution
+====================
+We can create a branch of the repository in github and use it as a "throwaway" prototype
