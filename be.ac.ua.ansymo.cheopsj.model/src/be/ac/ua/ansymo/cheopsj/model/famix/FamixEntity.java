@@ -12,7 +12,9 @@ package be.ac.ua.ansymo.cheopsj.model.famix;
 
 import org.eclipse.swt.graphics.Image;
 
-public abstract class FamixEntity extends FamixObject {
+import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
+
+public abstract class FamixEntity extends Subject {
 	
 	/**
 	 * 

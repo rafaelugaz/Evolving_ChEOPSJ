@@ -25,7 +25,7 @@ import org.eclipse.zest.layouts.dataStructures.InternalRelationship;
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Remove;
-import be.ac.ua.ansymo.cheopsj.model.famix.FamixObject;
+import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
 
 
 /**
@@ -204,7 +204,7 @@ public class ZestChangeViewLayout extends AbstractLayoutAlgorithm {
 			if (sourceNode.getLayoutEntity().getGraphData() instanceof GraphNode && destNode.getLayoutEntity().getGraphData() instanceof GraphNode) {
 				GraphNode sNode = (GraphNode) sourceNode.getLayoutEntity().getGraphData();
 				GraphNode dNode = (GraphNode) destNode.getLayoutEntity().getGraphData();
-				if (sNode.getData() instanceof FamixObject && dNode.getData() instanceof FamixObject) {
+				if (sNode.getData() instanceof Subject && dNode.getData() instanceof Subject) {
 					famixRelationships.add(relationship);
 				}
 			}
@@ -229,7 +229,7 @@ public class ZestChangeViewLayout extends AbstractLayoutAlgorithm {
 		for (InternalNode entity : entitiesToLayout) {
 			if (entity.getLayoutEntity().getGraphData() instanceof GraphNode) {
 				GraphNode node = (GraphNode) entity.getLayoutEntity().getGraphData();
-				if (node.getData() instanceof FamixObject) {
+				if (node.getData() instanceof Subject) {
 					famixObjects.add(entity);
 				}
 			}

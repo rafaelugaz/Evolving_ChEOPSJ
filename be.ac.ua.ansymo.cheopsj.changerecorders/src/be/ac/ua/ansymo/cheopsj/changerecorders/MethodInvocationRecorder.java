@@ -11,9 +11,6 @@
 
 package be.ac.ua.ansymo.cheopsj.changerecorders;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.evolizer.changedistiller.model.entities.SourceCodeEntity;
@@ -24,12 +21,12 @@ import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Change;
 import be.ac.ua.ansymo.cheopsj.model.changes.Remove;
+import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixAttribute;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixInvocation;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixLocalVariable;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixMethod;
-import be.ac.ua.ansymo.cheopsj.model.famix.FamixObject;
 
 /**
  * @author quinten
@@ -122,7 +119,7 @@ public class MethodInvocationRecorder extends StatementRecorder {
 	 */
 	private FamixMethod findMethodInType(String localVarOrField, String invokedMethodName) {
 
-		FamixObject famixVar = null;
+		Subject famixVar = null;
 
 		if(invokedby.containsVariable(invokedby.getUniqueName() + '{' + localVarOrField + '}')){
 			//is it a variable or parameter?

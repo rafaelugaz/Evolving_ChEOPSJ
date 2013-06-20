@@ -12,12 +12,12 @@ import be.ac.ua.ansymo.cheopsj.model.changes.Change;
 import be.ac.ua.ansymo.cheopsj.model.changes.CompositeChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Remove;
+import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixAttribute;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixInvocation;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixLocalVariable;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixMethod;
-import be.ac.ua.ansymo.cheopsj.model.famix.FamixObject;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixPackage;
 
 public class TestModel {
@@ -25,7 +25,7 @@ public class TestModel {
 	private Change change;
 	private ModelManager model;
 	private ModelManagerChange modelChange;
-	private FamixObject fe1, fe2, fe3, fe4, fe5, fe6;
+	private Subject fe1, fe2, fe3, fe4, fe5, fe6;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -58,10 +58,10 @@ public class TestModel {
 	@Test
 	public void testAddFamixElement() {
 		int sizeFamEnt;
-		FamixObject[] fes = {fe1, fe2, fe3, fe4, fe5, fe6};
+		Subject[] fes = {fe1, fe2, fe3, fe4, fe5, fe6};
 		String nameFamPack, nameFamClass, nameFamMeth, nameFamAtt, nameFamVar, nameFamInv;
 		
-		for(FamixObject fe : fes) {
+		for(Subject fe : fes) {
 			sizeFamEnt = model.getFamixEntities().size();
 			model.addFamixElement(fe);
 			

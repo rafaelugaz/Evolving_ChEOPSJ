@@ -21,9 +21,9 @@ import org.eclipse.zest.core.viewers.IConnectionStyleProvider;
 import org.eclipse.zest.core.widgets.ZestStyles;
 
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
+import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixEntity;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixInvocation;
-import be.ac.ua.ansymo.cheopsj.model.famix.FamixObject;
 
 
 public class ZestChangeViewLabelProvider extends LabelProvider implements IConnectionStyleProvider {
@@ -93,12 +93,12 @@ public class ZestChangeViewLabelProvider extends LabelProvider implements IConne
 	@Override
 	public Color getColor(Object rel) {
 		if (rel instanceof EntityConnectionData) {
-			if (((EntityConnectionData) rel).source instanceof FamixObject) {
+			if (((EntityConnectionData) rel).source instanceof Subject) {
 				return FamixConnectionColor;
 			} else if (((EntityConnectionData) rel).source instanceof AtomicChange) {
 				if (((EntityConnectionData) rel).dest instanceof AtomicChange) {
 					return ChangeConnectionColor;
-				} else if (((EntityConnectionData) rel).dest instanceof FamixObject) {
+				} else if (((EntityConnectionData) rel).dest instanceof Subject) {
 					return ChangeFamixConnectionColor;
 				}
 			}

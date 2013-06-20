@@ -10,12 +10,14 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.model.famix;
 
+import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
+
 public class FamixProperty {
 
 	/*
 	 * 
 	 */
-	private FamixObject belongsToObject = null;
+	private Subject belongsToObject = null;
 	
 	/*
 	 * 
@@ -35,7 +37,7 @@ public class FamixProperty {
 	 * 
 	 */
 	
-	public FamixObject getBelongsToObject()
+	public Subject getBelongsToObject()
 	{
 		return belongsToObject;
 	}
@@ -48,7 +50,7 @@ public class FamixProperty {
 	 * @param object The belongsToObject to set.
 	 *
 	 */
-	public void setBelongsToObject(FamixObject object){
+	public void setBelongsToObject(Subject object){
 		this.belongsToObject = object;
 	}
 
