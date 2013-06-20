@@ -101,15 +101,6 @@ public class TestModel {
 		}
 	}
 	
-	/*
-	@SuppressWarnings("rawtypes")
-	@Test
-	public void testLoadModel() throws NoSuchMethodException, SecurityException, 
-	IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		
-		model.loadModel();
-		
-	}*/
 	
 	@Test
 	public void testGetSummary() {
@@ -150,22 +141,14 @@ public class TestModel {
 		assertTrue(removeCountLoc == removeCount);
 		assertTrue(changeCount >= (addCount + removeCount));
 	}
-	
+
 	/*
 	@SuppressWarnings("rawtypes")
 	@Test
-	public void testTest() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		Class[] paramOIS = new Class[1];	
-		paramOIS[0] = Integer.TYPE;
-		Class<?> noparams[] = {};
-		int a = 2, b;
+	public void testLoadModel() throws NoSuchMethodException, SecurityException, 
+	IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		
-		Method loadFamixEntitiesMethod = 
-				ModelManager.class.getDeclaredMethod("test", noparams);
-		loadFamixEntitiesMethod.setAccessible(true);
+		model.loadModel();
 		
-		b = (Integer) loadFamixEntitiesMethod.invoke(model, null);
-		assertTrue(b == (5));
 	}*/
-
 }
