@@ -167,6 +167,7 @@ After examining the code for mismatches with the initial hypothesis, we adapted 
 \end{figure}
 
 \subsubsection{Final refined design}
+\label{sec:finalDesign}
 After one last examination of the code we could answer the question remaining of how the AbstractEntityRecorder where instantiated. We found out that this is done by two classes: the ChangeRecorder class in the Logger package and the ChangeExtractor class in the Distiller package. This can be seen in Figure \ref{fig:spec2b}. This makes sense because these two packages take care of the two functionalities that store changes.
 
 \begin{figure}[h]
@@ -322,6 +323,17 @@ Furthermore, we have noticed a big method called \emph{printGraphForGroove} foll
 Lastly the class ModelManager is not deleted, but now it is not a god class. This class is now in charge of managing the entities like famix classes, methods, variables and also for loading and saving the method. All the external incoming calls are not coming to ModelManager as before the refactoring, but all of them are redirected to the class that contains the method they want to call.
 
 After splitting the god class we have run InFusion to analyze the project and we have received some satisfying results. First of all the overall quality deficit index (QDI) was lowered from 11.9 to 7.1, which means that the refactorings we have made are correct and are providing results. As second the class ModelManager was not more recognized as a god class, but as a regular class. It is worth mentioning that the tests we have written about the ModelManager are now testing some methods from the new classes and they are not showing any failures.
+
+\subsection{Move Behavior Close to Data}
+After analyzing and understanding the part of the system that concerns to our re-engineering goal and to make the inclusion of new type of changes to the system easier we decided that the design of the change recorders shown in section \ref{sec:finalDesign} should be modified. In the current design, in order to record changes of a new entity, e.g. local variables or accessors, two classes must be subclassed and their respective methods must be implemented: the Subject and AbstractEntityRecorder abstract classes.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{Images/behaviorToData}
+\caption{The design of system after the moving the behavior closer to data}
+\label{fig:behaviorToData}
+\end{figure}
+
 
 \newpage
 \section{References}
